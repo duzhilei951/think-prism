@@ -4,7 +4,7 @@
     "zh": "ThinkPrism - 多维思辨透镜",
     "en": "ThinkPrism - Multi-Dimensional Thinking Lens"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": {
     "zh": "输入任一命题，通过第一性原理、反向拆解、极端压力测试与决策边界四重视角，层层剥离认知盲区。",
     "en": "Input any proposition and dismantle cognitive blind spots through First-Principles, Deconstruction, Stress-Testing, and Decision Boundaries."
@@ -20,16 +20,16 @@
     "clipboard.write"
   ],
   "releaseNotes": {
-    "zh": "ThinkPrism 多维思辨透镜首发版本发布。内置第一性原理、反向拆解、极端压力测试与决策边界四维认知透镜，支持流式并发推演、实时进度条、Markdown 与 JSON 双格式导出及本地优先决策档案库。",
-    "en": "Initial release of ThinkPrism. Features 4 cognitive lenses (First Principles, Deconstruction, Stress Test, Decision Boundary), streaming inference, dual Markdown/JSON export, and local-first archives."
+    "zh": "大幅升级推演等待体验：新增四维透镜动态推演流水线与极光动效、毫秒级跑秒计时器、阶段性进度灯点亮反馈、智能松散JSON自愈解析，以及随时取消推演功能，告别黑盒等待焦虑。",
+    "en": "Major UX upgrade: Added 4-lens dynamic inference pipeline with aurora animations, real-time timer badge, step-by-step progress lights, relaxed JSON repair parser, and instant cancel option."
   },
   "update": {
     "url": "https://duzhilei951.github.io/think-prism/manifest.json"
   },
   "package": {
-    "url": "https://duzhilei951.github.io/think-prism/releases/1.0.0/think-prism.miniapp",
+    "url": "https://duzhilei951.github.io/think-prism/releases/1.0.1/think-prism.miniapp",
     "iconUrl": "https://duzhilei951.github.io/think-prism/icon.png",
-    "sha256": "727cab8c2734221b8f5069dec9125e8376ff1fbe497be0f83122814d28427754",
-    "size": 22849
+    "sha256": "847e42c8ba4a3867051d04c4fc7c505b083e13641052cc608d6e8257d8676b37",
+    "size": 25152
   }
 }

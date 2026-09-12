@@ -943,24 +943,190 @@ body {
 .history-topic { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #f1f5f9; }
 .history-time { font-size: 11.5px; color: var(--text-sub); }
 
-/* 加载中动画 */
+/* ===== 动态推演流水线与极光 Loading 系统 ===== */
 .loading-state {
   display: none;
-  text-align: center;
-  padding: 70px 0;
+  max-width: 680px;
+  margin: 40px auto;
+  background: rgba(18, 24, 38, 0.75);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 20px;
+  padding: 32px 28px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  animation: fadeIn 0.35s ease;
 }
 
-.loading-spinner {
-  width: 46px;
-  height: 46px;
-  border: 3px solid rgba(99, 102, 241, 0.2);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 16px;
+.loading-pipeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text { font-size: 14.5px; color: var(--text-muted); }
+
+.pipeline-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.prism-pulse-icon {
+  font-size: 24px;
+  animation: pulseGlow 1.8s infinite ease-in-out;
+  display: inline-block;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(0.95); opacity: 0.7; filter: drop-shadow(0 0 4px rgba(99,102,241,0.4)); }
+  50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 14px rgba(168,85,247,0.8)); }
+  100% { transform: scale(0.95); opacity: 0.7; filter: drop-shadow(0 0 4px rgba(99,102,241,0.4)); }
+}
+
+.pipeline-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.pipeline-time-badge {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 13px;
+  color: var(--primary);
+  background: rgba(99, 102, 241, 0.12);
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  font-weight: 600;
+}
+
+/* 进度步骤条 */
+.pipeline-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.3s ease;
+  font-size: 13.5px;
+  color: #64748b;
+}
+
+.pipeline-step.active {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #f1f5f9;
+  transform: translateX(4px);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.12);
+}
+
+.pipeline-step.done {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.step-indicator {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.08);
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.pipeline-step.active .step-indicator {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+  animation: breathe 1.2s infinite ease-in-out;
+}
+
+.pipeline-step.done .step-indicator {
+  background: #10b981;
+  color: #fff;
+}
+
+@keyframes breathe {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.step-name {
+  font-weight: 600;
+  flex: 1;
+}
+
+.step-status {
+  font-size: 12px;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+}
+
+/* 进度条 */
+.progress-bar-wrap {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 5%;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
+}
+
+/* 底部操作与提示 */
+.pipeline-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pipeline-hint {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.btn-cancel-explore {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel-explore:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+}
 
 /* 轻量 Toast */
 .toast {
@@ -1156,9 +1322,50 @@ body {
     </section>
 
     <!-- 加载中 -->
+        <!-- 动态推演流水线 Loading -->
     <div class="loading-state" id="loadingState">
-      <div class="loading-spinner"></div>
-      <div class="loading-text" id="loadingText">正在调动认知透镜，穿透深层本质...</div>
+      <div class="loading-pipeline-header">
+        <div class="pipeline-title-group">
+          <span class="prism-pulse-icon">🔮</span>
+          <div>
+            <div class="pipeline-title">认知棱镜正在高维穿透...</div>
+            <div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">四维透镜并行解构中</div>
+          </div>
+        </div>
+        <div class="pipeline-time-badge" id="timerBadge">已耗时 0.0s</div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="pipelineProgress"></div>
+      </div>
+
+      <div class="pipeline-steps">
+        <div class="pipeline-step active" id="step1">
+          <div class="step-indicator">1</div>
+          <div class="step-name">🎯 核心穿透 · 5-Whys 刨到底与本质金句</div>
+          <div class="step-status" id="stepStatus1">推演中...</div>
+        </div>
+        <div class="pipeline-step" id="step2">
+          <div class="step-indicator">2</div>
+          <div class="step-name">📐 通俗白板 vs 象牙塔架构双重解释</div>
+          <div class="step-status" id="stepStatus2">排队中</div>
+        </div>
+        <div class="pipeline-step" id="step3">
+          <div class="step-indicator">3</div>
+          <div class="step-name">🔬 反向拆解 · 80分与95分关键分水岭</div>
+          <div class="step-status" id="stepStatus3">排队中</div>
+        </div>
+        <div class="pipeline-step" id="step4">
+          <div class="step-indicator">4</div>
+          <div class="step-name">⚔️ 双向钢人决斗 · 极端制衡与关键变量</div>
+          <div class="step-status" id="stepStatus4">排队中</div>
+        </div>
+      </div>
+
+      <div class="pipeline-footer">
+        <div class="pipeline-hint">💡 深度思辨通常需要 12~25 秒，请耐心等待思想结晶</div>
+        <button class="btn-cancel-explore" id="btnCancelExplore">取消推演</button>
+      </div>
     </div>
 
     <!-- 结果面板 -->
@@ -1390,6 +1597,117 @@ body {
     ].join('\n');
   }
 
+  let activeTimer = null;
+  let isExploring = false;
+  let exploreAbortController = null;
+
+  function stopPipelineTimer() {
+    if (activeTimer) {
+      clearInterval(activeTimer);
+      activeTimer = null;
+    }
+  }
+
+  function updatePipelineStage(elapsed) {
+    const timerBadge = document.getElementById('timerBadge');
+    const progressBar = document.getElementById('pipelineProgress');
+    if (timerBadge) {
+      timerBadge.textContent = '已耗时 ' + elapsed.toFixed(1) + 's';
+    }
+
+    const s1 = document.getElementById('step1');
+    const s2 = document.getElementById('step2');
+    const s3 = document.getElementById('step3');
+    const s4 = document.getElementById('step4');
+
+    const st1 = document.getElementById('stepStatus1');
+    const st2 = document.getElementById('stepStatus2');
+    const st3 = document.getElementById('stepStatus3');
+    const st4 = document.getElementById('stepStatus4');
+
+    if (elapsed < 3.5) {
+      if (progressBar) progressBar.style.width = Math.min(25, 5 + elapsed * 6) + '%';
+      if (s1) s1.className = 'pipeline-step active';
+      if (s2) s2.className = 'pipeline-step';
+      if (s3) s3.className = 'pipeline-step';
+      if (s4) s4.className = 'pipeline-step';
+      if (st1) st1.textContent = '穿透本质中...';
+      if (st2) st2.textContent = '排队中';
+      if (st3) st3.textContent = '排队中';
+      if (st4) st4.textContent = '排队中';
+    } else if (elapsed < 8.0) {
+      if (progressBar) progressBar.style.width = (25 + (elapsed - 3.5) * 6) + '%';
+      if (s1) s1.className = 'pipeline-step done';
+      if (s2) s2.className = 'pipeline-step active';
+      if (s3) s3.className = 'pipeline-step';
+      if (s4) s4.className = 'pipeline-step';
+      if (st1) st1.textContent = '✓ 已提炼';
+      if (st2) st2.textContent = '双重解释生成中...';
+      if (st3) st3.textContent = '排队中';
+      if (st4) st4.textContent = '排队中';
+    } else if (elapsed < 14.0) {
+      if (progressBar) progressBar.style.width = (52 + (elapsed - 8.0) * 4.5) + '%';
+      if (s1) s1.className = 'pipeline-step done';
+      if (s2) s2.className = 'pipeline-step done';
+      if (s3) s3.className = 'pipeline-step active';
+      if (s4) s4.className = 'pipeline-step';
+      if (st1) st1.textContent = '✓ 已提炼';
+      if (st2) st2.textContent = '✓ 已完成';
+      if (st3) st3.textContent = '反向工程解构中...';
+      if (st4) st4.textContent = '排队中';
+    } else {
+      if (progressBar) progressBar.style.width = Math.min(95, 79 + (elapsed - 14.0) * 1.5) + '%';
+      if (s1) s1.className = 'pipeline-step done';
+      if (s2) s2.className = 'pipeline-step done';
+      if (s3) s3.className = 'pipeline-step done';
+      if (s4) s4.className = 'pipeline-step active';
+      if (st1) st1.textContent = '✓ 已提炼';
+      if (st2) st2.textContent = '✓ 已完成';
+      if (st3) st3.textContent = '✓ 已锁定';
+      if (st4) st4.textContent = '极限制衡中 (' + elapsed.toFixed(0) + 's)...';
+    }
+  }
+
+  // 绑定取消按钮
+  document.getElementById('btnCancelExplore')?.addEventListener('click', () => {
+    if (isExploring) {
+      isExploring = false;
+      stopPipelineTimer();
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('heroSection').style.display = 'block';
+      showToast('已取消本次思辨推演');
+    }
+  });
+
+  // 智能松散 JSON 解析器（支持 Markdown、尾逗号、截断自愈）
+  function parseRelaxedJson(raw) {
+    if (!raw) return null;
+    let text = raw.trim();
+
+    // 优先提取 ```json ``` 区域
+    const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+    if (codeBlockMatch) {
+      text = codeBlockMatch[1].trim();
+    } else {
+      const firstBrace = text.indexOf('{');
+      const lastBrace = text.lastIndexOf('}');
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        text = text.slice(firstBrace, lastBrace + 1);
+      }
+    }
+
+    try {
+      return JSON.parse(text);
+    } catch (e) {}
+
+    try {
+      const cleaned = text.replace(/,\s*([\]}])/g, '$1');
+      return JSON.parse(cleaned);
+    } catch (e) {}
+
+    return null;
+  }
+
   async function startExplore() {
     const topic = document.getElementById('topicInput').value.trim();
     if (!topic) {
@@ -1397,9 +1715,19 @@ body {
       return;
     }
 
+    isExploring = true;
     document.getElementById('heroSection').style.display = 'none';
     document.getElementById('resultSection').style.display = 'none';
     document.getElementById('loadingState').style.display = 'block';
+
+    // 启动推演流水线计时器
+    stopPipelineTimer();
+    const startTime = Date.now();
+    updatePipelineStage(0);
+    activeTimer = setInterval(() => {
+      const elapsed = (Date.now() - startTime) / 1000;
+      updatePipelineStage(elapsed);
+    }, 150);
 
     const prompt = createPrismPrompt(topic);
     let fullResponse = '';
@@ -1416,12 +1744,13 @@ body {
           },
           {
             onChunk: (chunk) => {
+              if (!isExploring) return;
               fullResponse += chunk;
             }
           }
         );
       } else {
-        await new Promise(r => setTimeout(r, 1200));
+        await new Promise(r => setTimeout(r, 1600));
         fullResponse = JSON.stringify({
           punchline: {
             title: '「' + topic + '」的本质不是工具升级，而是认知密度的外化与生产力要素重构。',
@@ -1453,23 +1782,40 @@ body {
         });
       }
 
-      let cleaned = fullResponse.trim();
-      const firstBrace = cleaned.indexOf('{');
-      const lastBrace = cleaned.lastIndexOf('}');
-      if (firstBrace !== -1 && lastBrace !== -1) {
-        cleaned = cleaned.slice(firstBrace, lastBrace + 1);
-      }
-      const data = JSON.parse(cleaned);
-      currentResultObj = { topic, data, time: new Date().toISOString() };
+      if (!isExploring) return;
 
+      const data = parseRelaxedJson(fullResponse);
+      if (!data) {
+        throw new Error('无法解析返回的 JSON 内容');
+      }
+
+      // 成功打通所有流水线
+      const pb = document.getElementById('pipelineProgress');
+      if (pb) pb.style.width = '100%';
+      for (let i = 1; i <= 4; i++) {
+        const s = document.getElementById('step' + i);
+        const st = document.getElementById('stepStatus' + i);
+        if (s) s.className = 'pipeline-step done';
+        if (st) st.textContent = '✓ 已就绪';
+      }
+
+      // 短暂平滑过渡后呈现结果
+      await new Promise(r => setTimeout(r, 300));
+      stopPipelineTimer();
+
+      currentResultObj = { topic, data, time: new Date().toISOString() };
       saveToHistory(currentResultObj);
       renderResult(currentResultObj);
 
     } catch (err) {
+      if (!isExploring) return;
       console.error('Explore error:', err);
+      stopPipelineTimer();
       showToast('⚠️ 解析思考结果失败，请重试');
       document.getElementById('heroSection').style.display = 'block';
     } finally {
+      isExploring = false;
+      stopPipelineTimer();
       document.getElementById('loadingState').style.display = 'none';
     }
   }
