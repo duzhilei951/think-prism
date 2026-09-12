@@ -1,0 +1,35 @@
+{
+  "id": "com.zhilei.think-prism",
+  "name": {
+    "zh": "ThinkPrism - 多维思辨透镜",
+    "en": "ThinkPrism - Multi-Dimensional Thinking Lens"
+  },
+  "version": "1.0.0",
+  "description": {
+    "zh": "输入任一命题，通过第一性原理、反向拆解、极端压力测试与决策边界四重视角，层层剥离认知盲区。",
+    "en": "Input any proposition and dismantle cognitive blind spots through First-Principles, Deconstruction, Stress-Testing, and Decision Boundaries."
+  },
+  "entry": "index.html",
+  "icon": {
+    "path": "icon.png",
+    "sha256": "0547b487e47284cade2fa5fb772fc21f0c96ec6ac12b01eb6ccdca18c93e65fe"
+  },
+  "permissions": [
+    "ai.chat",
+    "storage.*",
+    "clipboard.write"
+  ],
+  "releaseNotes": {
+    "zh": "ThinkPrism 多维思辨透镜首发版本发布。内置第一性原理、反向拆解、极端压力测试与决策边界四维认知透镜，支持流式并发推演、实时进度条、Markdown 与 JSON 双格式导出及本地优先决策档案库。",
+    "en": "Initial release of ThinkPrism. Features 4 cognitive lenses (First Principles, Deconstruction, Stress Test, Decision Boundary), streaming inference, dual Markdown/JSON export, and local-first archives."
+  },
+  "update": {
+    "url": "https://duzhilei951.github.io/think-prism/manifest.json"
+  },
+  "package": {
+    "url": "https://duzhilei951.github.io/think-prism/releases/1.0.0/think-prism.miniapp",
+    "iconUrl": "https://duzhilei951.github.io/think-prism/icon.png",
+    "sha256": "727cab8c2734221b8f5069dec9125e8376ff1fbe497be0f83122814d28427754",
+    "size": 22849
+  }
+}

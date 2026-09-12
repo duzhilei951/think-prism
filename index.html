@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThinkPrism · 思想棱镜</title>
+<style>
+:root {
+  --bg: #07090e;
+  --bg-dots: rgba(255, 255, 255, 0.04);
+  --surface: #0f121d;
+  --surface-card: rgba(18, 22, 36, 0.75);
+  --surface-hover: rgba(28, 35, 56, 0.85);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(99, 102, 241, 0.35);
+  --border-focus: rgba(129, 140, 248, 0.65);
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --accent-pink: #ec4899;
+  --accent-cyan: #06b6d4;
+  --accent-amber: #f59e0b;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-sub: #64748b;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 50% -10%, rgba(99, 102, 241, 0.18) 0%, transparent 60%),
+    radial-gradient(circle at 15% 25%, rgba(236, 72, 153, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 35%, rgba(6, 182, 212, 0.08) 0%, transparent 45%),
+    radial-gradient(var(--bg-dots) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+  background-attachment: fixed;
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+/* ===== 顶部导航栏 ===== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(7, 9, 14, 0.82);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1 0%, #ec4899 50%, #06b6d4 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.brand:hover .brand-icon {
+  transform: rotate(10deg) scale(1.08);
+}
+
+.brand-title {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(to right, #ffffff 30%, #c7d2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-btn {
+  background: rgba(15, 18, 29, 0.8);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 8px 15px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+}
+
+.nav-btn:hover {
+  background: rgba(30, 37, 58, 0.9);
+  color: var(--text-main);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+/* ===== 核心容器 ===== */
+.container {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+  width: 100%;
+  flex: 1;
+}
+
+/* ===== 主页 HERO 视觉升级 ===== */
+.hero-section {
+  text-align: center;
+  padding: 56px 0 40px;
+  position: relative;
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(129, 140, 248, 0.25);
+  color: #c7d2fe;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+}
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 10px #34d399;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.hero-title {
+  font-size: clamp(34px, 5vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  margin-bottom: 18px;
+  color: #ffffff;
+}
+
+.hero-gradient-text {
+  background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 45%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  text-shadow: 0 0 35px rgba(168, 85, 247, 0.25);
+}
+
+.hero-subtitle {
+  color: var(--text-muted);
+  font-size: clamp(15px, 1.8vw, 17px);
+  max-width: 660px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* 现代浮雕发光输入台 */
+.search-wrapper {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.search-glow-wrap {
+  position: relative;
+  border-radius: 22px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.35) 0%, rgba(236, 72, 153, 0.25) 50%, rgba(6, 182, 212, 0.25) 100%);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7), 0 0 35px -5px rgba(99, 102, 241, 0.18);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.search-glow-wrap:focus-within {
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.85) 0%, rgba(244, 114, 182, 0.75) 50%, rgba(34, 211, 238, 0.75) 100%);
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.85), 0 0 45px 0 rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+}
+
+.search-box {
+  background: rgba(13, 16, 26, 0.95);
+  backdrop-filter: blur(18px);
+  border-radius: 20px;
+  padding: 8px 10px 8px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.search-icon-lens {
+  font-size: 19px;
+  color: #818cf8;
+  opacity: 0.9;
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 16px;
+  padding: 12px 0;
+  font-family: inherit;
+}
+
+.search-input::placeholder {
+  color: #475569;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  padding: 13px 26px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.45);
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  transform: scale(1.02);
+  box-shadow: 0 6px 22px rgba(79, 70, 229, 0.65);
+}
+.submit-btn:active { transform: scale(0.98); }
+
+/* 模式切换药丸 */
+.mode-chips {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.mode-chip {
+  background: rgba(15, 18, 29, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mode-chip:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
+}
+
+.mode-chip.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(236, 72, 153, 0.18) 100%);
+  border-color: rgba(129, 140, 248, 0.6);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(99, 102, 241, 0.25);
+}
+
+.chip-sub {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* 灵感标签 */
+.preset-topics {
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.preset-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-sub);
+}
+
+.preset-tag {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: #94a3b8;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preset-tag:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* 3 个特色胶囊横栏 */
+.features-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 50px;
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  .features-row { grid-template-columns: 1fr; }
+}
+
+.feature-capsule {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all 0.25s ease;
+}
+
+.feature-capsule:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.14);
+  transform: translateY(-2px);
+}
+
+.feat-icon {
+  font-size: 22px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.feat-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 4px;
+}
+
+.feat-desc {
+  font-size: 12.5px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* ===== 结果展示区 ===== */
+.result-section {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== 5 个透镜可视化卡片设计系统 ===== */
+
+/* --- 1. 金句主展板：精辟怪 (Punchline) --- */
+.punchline-banner {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(99, 102, 241, 0.2) 60%, rgba(6, 182, 212, 0.12) 100%);
+  border: 1px solid rgba(236, 72, 153, 0.35);
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.5), 0 0 30px rgba(236, 72, 153, 0.15);
+}
+
+.punchline-banner::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 5px; height: 100%;
+  background: linear-gradient(to bottom, #ec4899, #6366f1, #06b6d4);
+}
+
+.punchline-watermark {
+  position: absolute;
+  right: 20px;
+  bottom: -15px;
+  font-size: 120px;
+  font-family: Georgia, serif;
+  color: rgba(255, 255, 255, 0.03);
+  user-select: none;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.punchline-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.punchline-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #f472b6;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(236, 72, 153, 0.12);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(236, 72, 153, 0.25);
+}
+
+.punchline-headline {
+  font-size: clamp(19px, 2.2vw, 24px);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.45;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.punchline-subtext {
+  font-size: 14.5px;
+  color: #cbd5e1;
+  line-height: 1.65;
+}
+
+/* --- 卡片通用网格与结构 --- */
+.lenses-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.lens-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px 28px;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(14px);
+}
+
+.lens-card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.lens-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.lens-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lens-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.badge-dual { background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.3); }
+.badge-deconstruct { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
+.badge-matrix { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
+.badge-steelman { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+.lens-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+.lens-subtitle {
+  font-size: 12.5px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+
+/* --- 2. 双重解释：对比看板 (Dual Interpretation) --- */
+.dual-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .dual-container { grid-template-columns: 1fr; }
+}
+
+.dual-box {
+  background: rgba(15, 18, 29, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dual-box.whiteboard {
+  border-left: 4px solid #10b981;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.04) 0%, rgba(15, 18, 29, 0.85) 100%);
+}
+
+.dual-box.tower {
+  border-left: 4px solid #38bdf8;
+  background: linear-gradient(180deg, rgba(56, 189, 248, 0.04) 0%, rgba(15, 18, 29, 0.85) 100%);
+}
+
+.dual-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.dual-box.whiteboard .dual-tag { color: #6ee7b7; }
+.dual-box.tower .dual-tag { color: #7dd3fc; }
+
+.dual-content {
+  font-size: 14px;
+  color: #e2e8f0;
+  line-height: 1.7;
+}
+
+/* --- 3. 反向拆解：分水岭高光容器 (Deconstruction) --- */
+.deconstruct-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.decomp-block {
+  background: rgba(15, 18, 29, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+
+.decomp-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #93c5fd;
+  margin-bottom: 8px;
+}
+
+.decomp-text {
+  font-size: 14px;
+  color: #e2e8f0;
+  line-height: 1.65;
+}
+
+/* 核心分水岭警告容器：金橙色强化视觉 */
+.watershed-highlight {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(239, 68, 68, 0.08) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.1);
+  border-radius: 14px;
+  padding: 18px 20px;
+  position: relative;
+}
+
+.watershed-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: #fde047;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.watershed-content {
+  font-size: 14px;
+  color: #fef08a;
+  line-height: 1.65;
+}
+
+.laws-tag {
+  color: #c084fc;
+}
+
+/* --- 4. 时空坐标矩阵 (Matrix) --- */
+.matrix-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .matrix-container { grid-template-columns: 1fr; }
+}
+
+.matrix-column {
+  background: rgba(15, 18, 29, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+.matrix-col-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6ee7b7;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 垂直节点发光时间轴 */
+.matrix-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  padding-left: 18px;
+  margin-left: 6px;
+  border-left: 2px solid rgba(16, 185, 129, 0.3);
+}
+
+.matrix-node {
+  position: relative;
+}
+
+.matrix-node::before {
+  content: "";
+  position: absolute;
+  left: -23px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  border: 2px solid #07090e;
+}
+
+.node-epoch {
+  font-size: 12px;
+  font-weight: 700;
+  color: #34d399;
+  margin-bottom: 4px;
+}
+
+.node-desc {
+  font-size: 13.5px;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+/* --- 5. 双向钢人决斗竞技场 (Steelman Arena) --- */
+.steelman-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.steelman-arena {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .steelman-arena { grid-template-columns: 1fr; }
+}
+
+.steelman-side {
+  border-radius: 16px;
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.steelman-pro {
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 18, 29, 0.9) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+.steelman-pro::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: #10b981;
+}
+
+.steelman-con {
+  background: linear-gradient(180deg, rgba(244, 63, 94, 0.08) 0%, rgba(15, 18, 29, 0.9) 100%);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+}
+.steelman-con::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: #f43f5e;
+}
+
+.side-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.steelman-pro .side-title { color: #6ee7b7; }
+.steelman-con .side-title { color: #fda4af; }
+
+.side-content {
+  font-size: 13.5px;
+  color: #e2e8f0;
+  line-height: 1.65;
+}
+
+/* 决策天平中心：关键转折变量 */
+.pivot-variable-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.05) 100%);
+  border: 1px dashed rgba(245, 158, 11, 0.45);
+  border-radius: 14px;
+  padding: 16px 20px;
+}
+
+.pivot-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fcd34d;
+  margin-bottom: 6px;
+}
+
+.pivot-text {
+  font-size: 14px;
+  color: #fef3c7;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* --- 6. 底部行动脚手架 --- */
+.action-card {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(15, 18, 29, 0.9) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 18px;
+  padding: 20px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.action-info { flex: 1; }
+.action-label {
+  font-size: 12.5px;
+  color: #a5b4fc;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.action-content {
+  font-size: 14px;
+  color: #f8fafc;
+  line-height: 1.6;
+}
+
+.action-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.export-btn {
+  background: rgba(15, 18, 29, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-main);
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.export-btn:hover {
+  background: rgba(30, 37, 58, 0.9);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+/* ===== 历史档案弹窗 ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal-box {
+  background: rgba(18, 22, 36, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  width: min(90vw, 680px);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
+}
+
+.modal-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-body {
+  padding: 16px 22px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.history-item {
+  background: rgba(15, 18, 29, 0.75);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.history-item:hover {
+  border-color: var(--primary);
+  transform: translateX(4px);
+  background: rgba(30, 37, 58, 0.7);
+}
+
+.history-topic { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #f1f5f9; }
+.history-time { font-size: 11.5px; color: var(--text-sub); }
+
+/* 加载中动画 */
+.loading-state {
+  display: none;
+  text-align: center;
+  padding: 70px 0;
+}
+
+.loading-spinner {
+  width: 46px;
+  height: 46px;
+  border: 3px solid rgba(99, 102, 241, 0.2);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 14.5px; color: var(--text-muted); }
+
+/* 轻量 Toast */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1e2436;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: all 0.25s ease;
+  pointer-events: none;
+  z-index: 200;
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ===== 增强的 Markdown 实时排版渲染样式 ===== */
+.md-rendered {
+  color: #e2e8f0;
+  line-height: 1.75;
+  font-size: 14.5px;
+}
+.md-p {
+  margin-bottom: 8px;
+  line-height: 1.7;
+  font-size: 14px;
+  color: #e2e8f0;
+}
+.md-p:last-child { margin-bottom: 0; }
+.md-strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+.md-em {
+  color: #cbd5e1;
+  font-style: italic;
+}
+.md-code {
+  background: rgba(99, 102, 241, 0.18);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  margin: 0 2px;
+}
+.md-pre {
+  background: #090c14;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 10px 0;
+  overflow-x: auto;
+}
+.md-pre code {
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.md-ul, .md-ol {
+  margin: 6px 0 10px 20px;
+  padding: 0;
+}
+.md-li {
+  margin-bottom: 5px;
+  line-height: 1.65;
+  font-size: 14px;
+  color: #e2e8f0;
+}
+.md-quote {
+  border-left: 3px solid var(--primary);
+  background: rgba(99, 102, 241, 0.08);
+  padding: 8px 14px;
+  margin: 8px 0;
+  border-radius: 0 8px 8px 0;
+  color: #cbd5e1;
+  font-size: 13.5px;
+  font-style: italic;
+}
+.md-h1, .md-h2, .md-h3 {
+  color: #ffffff;
+  font-weight: 700;
+  margin: 12px 0 6px 0;
+  line-height: 1.35;
+}
+.md-h1 { font-size: 17px; }
+.md-h2 { font-size: 15.5px; }
+.md-h3 { font-size: 14.5px; }
+</style>
+</head>
+<body>
+
+  <!-- 顶部导航 -->
+  <nav class="navbar">
+    <div class="brand" id="btnHome">
+      <div class="brand-icon">✦</div>
+      <div class="brand-title">ThinkPrism · 思想棱镜</div>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn" id="btnHistory">📜 思考档案</button>
+      <button class="nav-btn" id="btnNew">＋ 新思考</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- 主页 HERO 区 -->
+    <section class="hero-section" id="heroSection">
+      <div class="hero-pill">
+        <span class="pulse-dot"></span>
+        <span>深度认知穿透引擎 · 5大战略透镜联动</span>
+      </div>
+      <h1 class="hero-title">将直觉折射为<span class="hero-gradient-text">本质洞见</span></h1>
+      <p class="hero-subtitle">告别平面长文与套话废话。输入任何命题、商业模式或路线两难，以第一性原理一击穿透本质，逆向拆解 80 分到 95 分的隐形壁垒。</p>
+      
+      <div class="search-wrapper">
+        <div class="search-glow-wrap">
+          <div class="search-box">
+            <span class="search-icon-lens">✦</span>
+            <input type="text" class="search-input" id="topicInput" placeholder="输入你想穿透的主题（例：Cursor与编程本质、免费模式、全职做独立开发）...">
+            <button class="submit-btn" id="btnExplore">
+              <span>穿透洞察</span>
+              <span>➔</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="mode-chips">
+          <div class="mode-chip active" data-mode="all">
+            <span>🌈</span>
+            <span>全景棱镜</span>
+            <span class="chip-sub">5大透镜全开</span>
+          </div>
+          <div class="mode-chip" data-mode="penetrate">
+            <span>🎯</span>
+            <span>概念穿透</span>
+            <span class="chip-sub">精辟怪 + 双重解释</span>
+          </div>
+          <div class="mode-chip" data-mode="deconstruct">
+            <span>🔬</span>
+            <span>逆向拆解</span>
+            <span class="chip-sub">架构 + 分水岭</span>
+          </div>
+          <div class="mode-chip" data-mode="decision">
+            <span>⚔️</span>
+            <span>两难决斗</span>
+            <span class="chip-sub">双向极限制衡 (Steelman)</span>
+          </div>
+        </div>
+
+        <div class="preset-topics">
+          <span class="preset-label">💡 灵感切入：</span>
+          <span class="preset-tag" data-val="Cursor 与 AI 时代的编程本质">Cursor 与 AI 编程本质</span>
+          <span class="preset-tag" data-val="做个人 IP 还是做小而美 SaaS 产品">个人 IP 还是小而美 SaaS</span>
+          <span class="preset-tag" data-val="从第一性原理看智能体工作流">智能体工作流第一性</span>
+          <span class="preset-tag" data-val="知识付费与咨询服务的质量分水岭">知识付费的质量分水岭</span>
+        </div>
+
+        <!-- 3 个认知视界特色卡片 -->
+        <div class="features-row">
+          <div class="feature-capsule">
+            <div class="feat-icon">💎</div>
+            <div class="feat-content">
+              <div class="feat-name">一语中的 (Punchline)</div>
+              <div class="feat-desc">5-Whys 刨根问底，反直觉刺穿表象认知</div>
+            </div>
+          </div>
+          <div class="feature-capsule">
+            <div class="feat-icon">📐</div>
+            <div class="feat-content">
+              <div class="feat-name">质量分水岭 (Watershed)</div>
+              <div class="feat-desc">拆解 80 分到 95 分的深层工程与业务隐形壁垒</div>
+            </div>
+          </div>
+          <div class="feature-capsule">
+            <div class="feat-icon">⚖️</div>
+            <div class="feat-content">
+              <div class="feat-name">极端制衡 (Steel-manning)</div>
+              <div class="feat-desc">推演对立双方最强论据，锁定唯一关键变量</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 加载中 -->
+    <div class="loading-state" id="loadingState">
+      <div class="loading-spinner"></div>
+      <div class="loading-text" id="loadingText">正在调动认知透镜，穿透深层本质...</div>
+    </div>
+
+    <!-- 结果面板 -->
+    <section class="result-section" id="resultSection">
+      <!-- 核心精辟金句 (Punchline) 主展板 -->
+      <div class="punchline-banner" id="punchlineCard">
+        <div class="punchline-watermark">“</div>
+        <div class="punchline-meta">
+          <span class="punchline-tag">🎯 精辟怪 · 本质洞穿 (Punchline)</span>
+        </div>
+        <div class="punchline-headline" id="punchlineTitle">—</div>
+        <div class="punchline-subtext" id="punchlineDesc">—</div>
+      </div>
+
+      <!-- 4 大透镜卡片 -->
+      <div class="lenses-grid">
+        <!-- 透镜 1：双重解释 -->
+        <div class="lens-card" id="cardDual">
+          <div class="lens-header">
+            <div class="lens-title-group">
+              <div class="lens-badge badge-dual">🌓</div>
+              <div>
+                <div class="lens-title">双重解释 (Dual Interpretation)</div>
+                <div class="lens-subtitle">通俗白板认知 ⟷ 严谨象牙塔架构</div>
+              </div>
+            </div>
+          </div>
+          <div class="dual-container">
+            <div class="dual-box whiteboard">
+              <div class="dual-tag">👶 白板视角 (任何人都能听懂的生活化直觉比喻)</div>
+              <div class="dual-content" id="dualWhiteboard">—</div>
+            </div>
+            <div class="dual-box tower">
+              <div class="dual-tag">🏛️ 象牙塔视角 (严格机理、边界与架构级定义)</div>
+              <div class="dual-content" id="dualTower">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 透镜 2：反向拆解 -->
+        <div class="lens-card" id="cardDeconstruct">
+          <div class="lens-header">
+            <div class="lens-title-group">
+              <div class="lens-badge badge-deconstruct">🔬</div>
+              <div>
+                <div class="lens-title">反向拆解 (Deconstruction)</div>
+                <div class="lens-subtitle">深层工程解构与 80/95 分质量分水岭</div>
+              </div>
+            </div>
+          </div>
+          <div class="deconstruct-steps">
+            <div class="decomp-block">
+              <div class="decomp-label">🧱 核心架构还原 (不可见系统的解剖)</div>
+              <div class="decomp-text" id="decompArchitecture">—</div>
+            </div>
+            
+            <!-- 分水岭高光警示容器 -->
+            <div class="watershed-highlight">
+              <div class="watershed-tag">⚠️ 关键分水岭 (80分做到95分卓越的隐形壁垒)</div>
+              <div class="watershed-content" id="decompWatershed">—</div>
+            </div>
+
+            <div class="decomp-block">
+              <div class="decomp-label laws-tag">📐 可迁移的第一性定律</div>
+              <div class="decomp-text" id="decompLaws">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 透镜 3：时空坐标 -->
+        <div class="lens-card" id="cardMatrix">
+          <div class="lens-header">
+            <div class="lens-title-group">
+              <div class="lens-badge badge-matrix">🧭</div>
+              <div>
+                <div class="lens-title">时空坐标矩阵 (Spatio-Temporal Matrix)</div>
+                <div class="lens-subtitle">纵向历史演进脉络 ⟷ 横向竞品生态切面</div>
+              </div>
+            </div>
+          </div>
+          <div class="matrix-container">
+            <div class="matrix-column">
+              <div class="matrix-col-title">⏳ 纵向演进链条 (过去、现在与未来拐点)</div>
+              <div class="matrix-timeline" id="matrixTimeline"></div>
+            </div>
+            <div class="matrix-column">
+              <div class="matrix-col-title">⚖️ 横向生态矩阵 (对标与差异化站位)</div>
+              <div class="decomp-text" id="matrixHorizontal">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 透镜 4：双向钢人 -->
+        <div class="lens-card" id="cardSteelman">
+          <div class="lens-header">
+            <div class="lens-title-group">
+              <div class="lens-badge badge-steelman">⚔️</div>
+              <div>
+                <div class="lens-title">双向钢人决斗 (Two-Way Steelman)</div>
+                <div class="lens-subtitle">把对立双方推到无可辩驳的最强形态</div>
+              </div>
+            </div>
+          </div>
+          <div class="steelman-wrapper">
+            <div class="steelman-arena">
+              <div class="steelman-side steelman-pro">
+                <div class="side-title">🟢 正方最强论证 (Steel-Man A)</div>
+                <div class="side-content" id="steelmanPro">—</div>
+              </div>
+              <div class="steelman-side steelman-con">
+                <div class="side-title">🔴 反方最强论证 (Steel-Man B)</div>
+                <div class="side-content" id="steelmanCon">—</div>
+              </div>
+            </div>
+            <div class="pivot-variable-card">
+              <div class="pivot-title">🔑 决斗转折变量 (The Pivot Variable · 左右决策的核心分歧)</div>
+              <div class="pivot-text" id="steelmanPivot">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部行动脚手架 -->
+      <div class="action-card">
+        <div class="action-info">
+          <div class="action-label">🚀 认知落地：高杠杆行动建议</div>
+          <div class="action-content" id="actionStep">—</div>
+        </div>
+        <div class="action-btns">
+          <button class="export-btn" id="btnCopyMarkdown">📋 复制深度研报 (Markdown)</button>
+          <button class="export-btn" id="btnCopyJson">📑 复制结构数据</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 历史档案弹窗 -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size:16px;">📜 思考档案库 (本地沉淀)</h3>
+        <button class="nav-btn" id="btnCloseHistory" style="padding:4px 10px;">✕</button>
+      </div>
+      <div class="modal-body" id="historyList">
+        <div style="color:var(--text-sub);text-align:center;padding:30px;">暂无历史思考沉淀</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  let currentMode = 'all';
+  let currentResultObj = null;
+
+  document.querySelectorAll('.mode-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.mode-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentMode = chip.dataset.mode;
+      applyModeFilter();
+    });
+  });
+
+  function applyModeFilter() {
+    const cardDual = document.getElementById('cardDual');
+    const cardDeconstruct = document.getElementById('cardDeconstruct');
+    const cardMatrix = document.getElementById('cardMatrix');
+    const cardSteelman = document.getElementById('cardSteelman');
+
+    cardDual.style.display = (currentMode === 'all' || currentMode === 'penetrate') ? 'block' : 'none';
+    cardDeconstruct.style.display = (currentMode === 'all' || currentMode === 'deconstruct') ? 'block' : 'none';
+    cardMatrix.style.display = (currentMode === 'all' || currentMode === 'deconstruct') ? 'block' : 'none';
+    cardSteelman.style.display = (currentMode === 'all' || currentMode === 'decision') ? 'block' : 'none';
+  }
+
+  document.querySelectorAll('.preset-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      document.getElementById('topicInput').value = tag.dataset.val;
+      startExplore();
+    });
+  });
+
+  document.getElementById('btnExplore').addEventListener('click', startExplore);
+  document.getElementById('topicInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') startExplore();
+  });
+
+  document.getElementById('btnHome').addEventListener('click', () => {
+    document.getElementById('resultSection').style.display = 'none';
+    document.getElementById('heroSection').style.display = 'block';
+  });
+  document.getElementById('btnNew').addEventListener('click', () => {
+    document.getElementById('resultSection').style.display = 'none';
+    document.getElementById('heroSection').style.display = 'block';
+    document.getElementById('topicInput').value = '';
+    document.getElementById('topicInput').focus();
+  });
+
+  function createPrismPrompt(topic) {
+    return [
+      '你是一个拥有顶级洞察力的认知与战略思考引擎【ThinkPrism · 思想棱镜】。',
+      '你拒绝套话与水话，专精于用第一性原理剖析事物底层。',
+      '请针对用户提供的主题，从以下 5 个认知透镜展开极高密度的本质拆解：',
+      '1. 精辟怪(Punchline)：5-Whys 刨到底的本质定义与一句极具穿透力、反直觉的金句。',
+      '2. 双重解释(Dual Interpretation)：',
+      '   - 白板视角：用哪怕小学生或完全外行都能秒懂的生活化生动比喻。',
+      '   - 象牙塔视角：专业、精准、具备严格边界与技术机理的学术/架构级定义。',
+      '3. 反向拆解(Deconstruction)：还原其底层不可见的工程架构，并指出决定 80 分到 95 分卓越程度的【关键分水岭】，提炼 1-2 条可跨领域复用的第一性铁律。',
+      '4. 时空坐标矩阵(Matrix)：纵向梳理其过去演进、当前状态与未来拐点，横向分析生态位与竞品站位差异。',
+      '5. 双向钢人决斗(Two-Way Steelman)：对该命题最尖锐的对立冲突进行极限制衡，分别给出正反双方各自无法被反驳的最强论据，并提炼出左右决定的唯一【关键转折变量】。',
+      '6. 高杠杆行动：给出 1 个立即可以落地的低摩擦微行动。',
+      '请严格输出为一个合法的 JSON 对象，绝对不要包含任何 markdown 代码块标记，直接输出纯 JSON：',
+      '{',
+      '  "punchline": { "title": "一语中的的金句", "desc": "本质溯源剖析" },',
+      '  "dual": { "whiteboard": "生动通俗比喻", "tower": "专业精密机理" },',
+      '  "deconstruct": { "architecture": "底层架构拆解", "watershed": "80分与95分的隐形壁垒", "laws": "可复用的第一性铁律" },',
+      '  "matrix": {',
+      '    "timeline": [',
+      '      {"epoch": "过去起源", "desc": "..."},',
+      '      {"epoch": "当下现状", "desc": "..."},',
+      '      {"epoch": "未来拐点", "desc": "..."}',
+      '    ],',
+      '    "horizontal": "横向竞品或替代方案的生态位对比"',
+      '  },',
+      '  "steelman": { "pro": "正方无可辩驳的最强论证", "con": "反方无情反击的最强论证", "pivot": "左右决定的关键转折变量" },',
+      '  "action": "立即落地的微行动建议"',
+      '}'
+    ].join('\n');
+  }
+
+  async function startExplore() {
+    const topic = document.getElementById('topicInput').value.trim();
+    if (!topic) {
+      showToast('⚠️ 请先输入你想穿透的主题');
+      return;
+    }
+
+    document.getElementById('heroSection').style.display = 'none';
+    document.getElementById('resultSection').style.display = 'none';
+    document.getElementById('loadingState').style.display = 'block';
+
+    const prompt = createPrismPrompt(topic);
+    let fullResponse = '';
+
+    try {
+      if (window.cherry && window.cherry.ai && window.cherry.ai.chat) {
+        await cherry.ai.chat(
+          {
+            model: 'default',
+            messages: [
+              { role: 'system', content: prompt },
+              { role: 'user', content: '请对以下主题进行深度穿透思考：' + topic }
+            ]
+          },
+          {
+            onChunk: (chunk) => {
+              fullResponse += chunk;
+            }
+          }
+        );
+      } else {
+        await new Promise(r => setTimeout(r, 1200));
+        fullResponse = JSON.stringify({
+          punchline: {
+            title: '「' + topic + '」的本质不是工具升级，而是认知密度的外化与生产力要素重构。',
+            desc: '现象上是交互界面的重塑，底层是系统工程的“确定性编译”替代了传统基于记忆与熟练度的体力劳动。'
+          },
+          dual: {
+            whiteboard: '就像原本需要手工绘制精密图纸的老师傅，突然得到了一台听懂人话的五轴数控机床。你不再拼体力描线，你的唯一价值在于是否真正懂得好零件的公差与结构设计。',
+            tower: '基于高维潜空间语义采样的确定性投射引擎。它不生产意图，只执行意图向目标状态的低熵编译过程，其效能极限严格受制于上下文对齐质量与先验模型边界。'
+          },
+          deconstruct: {
+            architecture: '1. 意图捕获层 -> 2. 上下文状态映射树 -> 3. 约束校验器 -> 4. 自动化交付闭环。',
+            watershed: '80分在于能否跑通标准流程；95分在于对 Corner Cases（极限边缘场景）的容错冗余、自愈能力与可解释性掌控。普通人将其视为玩具，高手将其视为确定性生产线。',
+            laws: '第一性铁律：所有自动化系统的真实杠杆率，等于架构决策的认知密度除以物理实现的摩擦成本。'
+          },
+          matrix: {
+            timeline: [
+              { epoch: '2020-2023 探索期', desc: '纯概念狂欢与单点脚本玩具，缺乏工程上下文' },
+              { epoch: '2024-2026 协同期', desc: '深度嵌入现实工作流，形成稳定的人机结对与智能体飞轮' },
+              { epoch: '未来 3 年拐点', desc: '从辅助执行跃迁至自主目标对齐与全链路价值自闭环' }
+            ],
+            horizontal: '相比传统手工方案，核心胜在低摩擦调度与极速反馈，但在极端未见样本上的推理仍受底层基模天花板约束。'
+          },
+          steelman: {
+            pro: '生产力跃迁是不可逆的客观规律。拒绝它等于在电动机普及时代坚持使用蒸汽机，哪怕早期有瑕疵也是下一代文明唯一的门票。',
+            con: '过度抽象会导致主体对工程底层的感知退化。一旦核心架构黑盒化，系统出现深层级联故障时将面临巨大的认知断层与维护灾难。',
+            pivot: '关键取决于你的核心竞争力在于【提出高价值问题与顶层架构决策】，还是【依靠熟练度进行体力化代码堆砌】。'
+          },
+          action: '挑一个过去耗费你 2 小时以上的重复性业务任务，用本命题的视角完整重构一遍，精确记录卡壳的边界条件。'
+        });
+      }
+
+      let cleaned = fullResponse.trim();
+      const firstBrace = cleaned.indexOf('{');
+      const lastBrace = cleaned.lastIndexOf('}');
+      if (firstBrace !== -1 && lastBrace !== -1) {
+        cleaned = cleaned.slice(firstBrace, lastBrace + 1);
+      }
+      const data = JSON.parse(cleaned);
+      currentResultObj = { topic, data, time: new Date().toISOString() };
+
+      saveToHistory(currentResultObj);
+      renderResult(currentResultObj);
+
+    } catch (err) {
+      console.error('Explore error:', err);
+      showToast('⚠️ 解析思考结果失败，请重试');
+      document.getElementById('heroSection').style.display = 'block';
+    } finally {
+      document.getElementById('loadingState').style.display = 'none';
+    }
+  }
+
+  // ===== 轻量级全功能 Markdown 实时解析渲染器 =====
+  function renderMarkdown(md) {
+    if (!md) return "";
+    let str = String(md);
+    
+    // 1. HTML 转义
+    str = str.replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;");
+
+    // 2. 代码块 ```code```
+    str = str.replace(/```([\s\S]*?)```/g, function(match, code) {
+      return '<pre class="md-pre"><code>' + code.trim() + '</code></pre>';
+    });
+
+    // 3. 行内代码 `code`
+    str = str.replace(/`([^`]+)`/g, '<code class="md-code">$1</code>');
+
+    // 4. 标题 ### h3, ## h2, # h1
+    str = str.replace(/^### (.*$)/gim, '<h3 class="md-h3">$1</h3>');
+    str = str.replace(/^## (.*$)/gim, '<h2 class="md-h2">$1</h2>');
+    str = str.replace(/^# (.*$)/gim, '<h1 class="md-h1">$1</h1>');
+
+    // 5. 引用块 > quote
+    str = str.replace(/^\&gt;\s?(.*$)/gim, '<blockquote class="md-quote">$1</blockquote>');
+
+    // 6. 逐行处理列表
+    const lines = str.split('\n');
+    let out = [];
+    let inUl = false;
+    let inOl = false;
+
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (/^[\-\+\*]\s+/.test(trimmed)) {
+        if (!inUl) {
+          if (inOl) { out.push("</ol>"); inOl = false; }
+          out.push('<ul class="md-ul">');
+          inUl = true;
+        }
+        out.push('<li class="md-li">' + trimmed.replace(/^[\-\+\*]\s+/, "") + "</li>");
+      } else if (/^\d+\.\s+/.test(trimmed)) {
+        if (!inOl) {
+          if (inUl) { out.push("</ul>"); inUl = false; }
+          out.push('<ol class="md-ol">');
+          inOl = true;
+        }
+        out.push('<li class="md-li">' + trimmed.replace(/^\d+\.\s+/, "") + "</li>");
+      } else {
+        if (inUl) { out.push("</ul>"); inUl = false; }
+        if (inOl) { out.push("</ol>"); inOl = false; }
+        if (trimmed) {
+          if (trimmed.startsWith("<pre") || trimmed.startsWith("<h1") || trimmed.startsWith("<h2") || trimmed.startsWith("<h3") || trimmed.startsWith("<blockquote")) {
+            out.push(trimmed);
+          } else {
+            out.push('<p class="md-p">' + trimmed + "</p>");
+          }
+        }
+      }
+    });
+    if (inUl) out.push("</ul>");
+    if (inOl) out.push("</ol>");
+
+    let html = out.join("");
+
+    // 7. 粗体与斜体
+    html = html.replace(/\*\*([^\*]+)\*\*/g, '<strong class="md-strong">$1</strong>');
+    html = html.replace(/__([^_]+)__/g, '<strong class="md-strong">$1</strong>');
+    html = html.replace(/\*([^\*<]+)\*/g, '<em class="md-em">$1</em>');
+
+    return html;
+  }
+
+  function renderResult(obj) {
+    const d = obj.data;
+    document.getElementById("punchlineTitle").innerHTML = renderMarkdown((d.punchline && d.punchline.title) || "—");
+    document.getElementById("punchlineDesc").innerHTML = renderMarkdown((d.punchline && d.punchline.desc) || "—");
+
+    document.getElementById("dualWhiteboard").innerHTML = renderMarkdown((d.dual && d.dual.whiteboard) || "—");
+    document.getElementById("dualTower").innerHTML = renderMarkdown((d.dual && d.dual.tower) || "—");
+
+    document.getElementById("decompArchitecture").innerHTML = renderMarkdown((d.deconstruct && d.deconstruct.architecture) || "—");
+    document.getElementById("decompWatershed").innerHTML = renderMarkdown((d.deconstruct && d.deconstruct.watershed) || "—");
+    document.getElementById("decompLaws").innerHTML = renderMarkdown((d.deconstruct && d.deconstruct.laws) || "—");
+
+    const tlEl = document.getElementById("matrixTimeline");
+    tlEl.innerHTML = ((d.matrix && d.matrix.timeline) || []).map(item => {
+      return '<div class="matrix-node"><div class="node-epoch">' + item.epoch + '</div><div class="node-desc">' + renderMarkdown(item.desc) + '</div></div>';
+    }).join("");
+    document.getElementById("matrixHorizontal").innerHTML = renderMarkdown((d.matrix && d.matrix.horizontal) || "—");
+
+    document.getElementById("steelmanPro").innerHTML = renderMarkdown((d.steelman && d.steelman.pro) || "—");
+    document.getElementById("steelmanCon").innerHTML = renderMarkdown((d.steelman && d.steelman.con) || "—");
+    document.getElementById("steelmanPivot").innerHTML = renderMarkdown((d.steelman && d.steelman.pivot) || "—");
+
+    document.getElementById("actionStep").innerHTML = renderMarkdown(d.action || "—");
+
+    applyModeFilter();
+    document.getElementById("resultSection").style.display = "block";
+  }
+
+  function saveToHistory(entry) {
+    try {
+      const history = JSON.parse(localStorage.getItem('think_prism_history') || '[]');
+      history.unshift(entry);
+      if (history.length > 30) history.pop();
+      localStorage.setItem('think_prism_history', JSON.stringify(history));
+    } catch(e) {}
+  }
+
+  document.getElementById('btnHistory').addEventListener('click', () => {
+    try {
+      const history = JSON.parse(localStorage.getItem('think_prism_history') || '[]');
+      const container = document.getElementById('historyList');
+      if (!history || history.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-sub);text-align:center;padding:30px;">暂无历史思考沉淀</div>';
+      } else {
+        container.innerHTML = history.map((h, i) => {
+          return '<div class="history-item" data-idx="' + i + '"><div class="history-topic">✦ ' + h.topic + '</div><div class="history-time">' + new Date(h.time).toLocaleString('zh-CN') + '</div></div>';
+        }).join('');
+        container.querySelectorAll('.history-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const idx = item.dataset.idx;
+            currentResultObj = history[idx];
+            document.getElementById('historyModal').classList.remove('show');
+            document.getElementById('heroSection').style.display = 'none';
+            renderResult(currentResultObj);
+          });
+        });
+      }
+    } catch(e) {}
+    document.getElementById('historyModal').classList.add('show');
+  });
+
+  document.getElementById('btnCloseHistory').addEventListener('click', () => {
+    document.getElementById('historyModal').classList.remove('show');
+  });
+
+  document.getElementById('btnCopyMarkdown').addEventListener('click', () => {
+    if (!currentResultObj) return;
+    const d = currentResultObj.data;
+    const md = [
+      '# 【ThinkPrism 思想研报】' + currentResultObj.topic,
+      '',
+      '> ' + ((d.punchline && d.punchline.title) || ''),
+      '> ' + ((d.punchline && d.punchline.desc) || ''),
+      '',
+      '## 一、双重解释',
+      '- **白板直觉**：' + ((d.dual && d.dual.whiteboard) || ''),
+      '- **专业机理**：' + ((d.dual && d.dual.tower) || ''),
+      '',
+      '## 二、反向拆解',
+      '- **核心架构**：' + ((d.deconstruct && d.deconstruct.architecture) || ''),
+      '- **关键分水岭**：' + ((d.deconstruct && d.deconstruct.watershed) || ''),
+      '- **第一性铁律**：' + ((d.deconstruct && d.deconstruct.laws) || ''),
+      '',
+      '## 三、时空坐标',
+      '- **纵向演进**：' + (((d.matrix && d.matrix.timeline) || []).map(t => t.epoch + ' ' + t.desc).join('；')),
+      '- **横向矩阵**：' + ((d.matrix && d.matrix.horizontal) || ''),
+      '',
+      '## 四、双向钢人决斗',
+      '- **正方最强论据**：' + ((d.steelman && d.steelman.pro) || ''),
+      '- **反方最强论据**：' + ((d.steelman && d.steelman.con) || ''),
+      '- **决策转折变量**：' + ((d.steelman && d.steelman.pivot) || ''),
+      '',
+      '## 五、行动脚手架',
+      (d.action || '')
+    ].join('\n');
+
+    copyText(md, '✓ 已复制完整 Markdown 深度研报');
+  });
+
+  document.getElementById('btnCopyJson').addEventListener('click', () => {
+    if (!currentResultObj) return;
+    copyText(JSON.stringify(currentResultObj, null, 2), '✓ 已复制结构化 JSON 数据');
+  });
+
+  function copyText(text, successMsg) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        () => showToast(successMsg),
+        () => fallbackCopy(text, successMsg)
+      );
+    } else {
+      fallbackCopy(text, successMsg);
+    }
+  }
+
+  function fallbackCopy(text, successMsg) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast(successMsg);
+    } catch(e) {
+      showToast('复制失败');
+    }
+    document.body.removeChild(ta);
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+</script>
+</body>
+</html>
