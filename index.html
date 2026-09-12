@@ -1804,7 +1804,7 @@ body {
       stopPipelineTimer();
 
       currentResultObj = { topic, data, time: new Date().toISOString() };
-      saveToHistory(currentResultObj);
+      await saveToHistory(currentResultObj);
       renderResult(currentResultObj);
 
     } catch (err) {
@@ -1921,18 +1921,50 @@ body {
     document.getElementById("resultSection").style.display = "block";
   }
 
-  function saveToHistory(entry) {
+  async function getHistoryList() {
     try {
-      const history = JSON.parse(localStorage.getItem('think_prism_history') || '[]');
-      history.unshift(entry);
-      if (history.length > 30) history.pop();
-      localStorage.setItem('think_prism_history', JSON.stringify(history));
+      if (window.cherry && window.cherry.storage && window.cherry.storage.get) {
+        const res = await window.cherry.storage.get('think_prism_history');
+        const raw = (res && typeof res === 'object' && 'value' in res) ? res.value : res;
+        if (raw) {
+          const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      }
+    } catch(e) {
+      console.warn('cherry.storage.get error:', e);
+    }
+    try {
+      return JSON.parse(localStorage.getItem('think_prism_history') || '[]');
+    } catch(e) {
+      return [];
+    }
+  }
+
+  async function saveToHistory(entry) {
+    const history = await getHistoryList();
+    history.unshift(entry);
+    if (history.length > 30) history.pop();
+    const serialized = JSON.stringify(history);
+
+    // 1. 持久化存储到 Cherry Storage
+    try {
+      if (window.cherry && window.cherry.storage && window.cherry.storage.set) {
+        await window.cherry.storage.set('think_prism_history', serialized);
+      }
+    } catch(e) {
+      console.warn('cherry.storage.set error:', e);
+    }
+
+    // 2. 本地 localStorage 兜底备份
+    try {
+      localStorage.setItem('think_prism_history', serialized);
     } catch(e) {}
   }
 
-  document.getElementById('btnHistory').addEventListener('click', () => {
+  document.getElementById('btnHistory').addEventListener('click', async () => {
     try {
-      const history = JSON.parse(localStorage.getItem('think_prism_history') || '[]');
+      const history = await getHistoryList();
       const container = document.getElementById('historyList');
       if (!history || history.length === 0) {
         container.innerHTML = '<div style="color:var(--text-sub);text-align:center;padding:30px;">暂无历史思考沉淀</div>';
