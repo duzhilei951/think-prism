@@ -6,30 +6,26 @@
   },
   "version": "1.0.1",
   "description": {
-    "zh": "输入任一命题，通过第一性原理、反向拆解、极端压力测试与决策边界四重视角，层层剥离认知盲区。",
-    "en": "Input any proposition and dismantle cognitive blind spots through First-Principles, Deconstruction, Stress-Testing, and Decision Boundaries."
+    "zh": "输入任一命题，通过第一性原理、双重解释、反向工程与极限制衡四重视角，层层剥离认知盲区。支持毫秒级推演计时与阶段流式状态反馈。",
+    "en": "Input any proposition and dismantle cognitive blind spots through First-Principles, Dual-Explanation, Reverse-Engineering, and Extreme Boundary tests."
   },
-  "entry": "index.html",
   "icon": {
     "path": "icon.png",
     "sha256": "0547b487e47284cade2fa5fb772fc21f0c96ec6ac12b01eb6ccdca18c93e65fe"
   },
+  "entry": "index.html",
   "permissions": [
     "ai.chat",
     "storage.*",
     "clipboard.write"
   ],
-  "releaseNotes": {
-    "zh": "大幅升级推演等待体验：新增四维透镜动态推演流水线与极光动效、毫秒级跑秒计时器、阶段性进度灯点亮反馈、智能松散JSON自愈解析，以及随时取消推演功能，告别黑盒等待焦虑。",
-    "en": "Major UX upgrade: Added 4-lens dynamic inference pipeline with aurora animations, real-time timer badge, step-by-step progress lights, relaxed JSON repair parser, and instant cancel option."
-  },
   "update": {
     "url": "https://duzhilei951.github.io/think-prism/manifest.json"
   },
   "package": {
     "url": "https://duzhilei951.github.io/think-prism/releases/1.0.1/think-prism.miniapp",
     "iconUrl": "https://duzhilei951.github.io/think-prism/icon.png",
-    "sha256": "847e42c8ba4a3867051d04c4fc7c505b083e13641052cc608d6e8257d8676b37",
-    "size": 25152
+    "sha256": "5c39cc631418819b47edb9ba080e78459d798bbd659c77a312fd8eca2f9080b7",
+    "size": 24757
   }
 }
