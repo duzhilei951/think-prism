@@ -4,10 +4,10 @@
     "zh": "ThinkPrism - 多维思辨透镜",
     "en": "ThinkPrism - Multi-Dimensional Thinking Lens"
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": {
-    "zh": "输入任一观点或议题，通过第一性原理、双重解释、反向工程与极限平衡四重视角深度剖析认知盲区。支持持久化历史记录。",
-    "en": "Dismantle cognitive blind spots through First-Principles, Dual-Explanation, Reverse-Engineering, and Extreme Boundary tests. Supports persistent history."
+    "zh": "输入任一议题，通过第一性原理、双重解释与极限平衡多维剖析；底部新增【穿透追问·深度研讨室】，锚定前序全景分析持续对话。",
+    "en": "Multi-lens inquiry: First-Principles, Dual-Explanation & Extreme Balance tests. Includes Follow-Up Deep Inquiry Room anchored on past deductions."
   },
   "icon": {
     "path": "icon.png",
@@ -20,16 +20,16 @@
     "clipboard.write"
   ],
   "update": {
-    "url": "https://duzhilei951.github.io/think-prism/manifest.json?v=1.0.2"
+    "url": "https://duzhilei951.github.io/think-prism/manifest.json?v=1.0.4"
   },
   "package": {
-    "url": "https://duzhilei951.github.io/think-prism/releases/1.0.3/think-prism.miniapp",
+    "url": "https://duzhilei951.github.io/think-prism/releases/1.0.4/think-prism.miniapp",
     "iconUrl": "https://duzhilei951.github.io/think-prism/icon.png",
-    "sha256": "9576c32a61126e15ef59a5ca4aeea1d94e7052a84cf94e3c12e56f72191179e0",
-    "size": 25257
+    "sha256": "cabd146ad7513bd19d678c450ec94320947fde2d8434636a70dc4fdfc5ca05c7",
+    "size": 29462
   },
   "releaseNotes": {
-    "zh": "v1.0.3: 接入 Cherry.storage 持久化双轨存储，彻底解决重启或刷新后历史沉淀丢失问题；规范包内安全哈希。",
-    "en": "v1.0.3: Added Cherry.storage dual-track persistence to preserve thinking history across reboots."
+    "zh": "v1.0.4: 新增【穿透追问·深度研讨室】，将上方全景分析自动注入上下文，支持围绕推演结果与 AI 深度持续研讨，并持久化保存追问记录。",
+    "en": "v1.0.4: Added Follow-Up Deep Inquiry Room anchored on preceding multi-dimensional analysis, supporting continuous AI deliberation and storage."
   }
 }

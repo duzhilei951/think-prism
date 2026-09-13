@@ -1225,6 +1225,235 @@ body {
 .md-h1 { font-size: 17px; }
 .md-h2 { font-size: 15.5px; }
 .md-h3 { font-size: 14.5px; }
+
+/* ==========================================================================
+   深度研讨室 · 围绕全景分析的穿透追问
+   ========================================================================== */
+.inquiry-section {
+  margin-top: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.inquiry-header {
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inquiry-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.inquiry-title .pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.inquiry-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(34, 211, 238, 0.12);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+}
+
+.inquiry-body {
+  padding: 20px;
+}
+
+.inquiry-chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-bottom: 18px;
+}
+
+.inquiry-chat-list::-webkit-scrollbar {
+  width: 5px;
+}
+.inquiry-chat-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+
+.inquiry-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: fadeIn 0.25s ease;
+}
+
+.inquiry-msg.user {
+  align-self: flex-end;
+  max-width: 85%;
+}
+
+.inquiry-msg.assistant {
+  align-self: flex-start;
+  max-width: 95%;
+  width: 100%;
+}
+
+.inquiry-bubble {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.65;
+  position: relative;
+}
+
+.inquiry-msg.user .inquiry-bubble {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(99, 102, 241, 0.25));
+  color: #f8fafc;
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-top-right-radius: 2px;
+}
+
+.inquiry-msg.assistant .inquiry-bubble {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  border-top-left-radius: 2px;
+}
+
+.inquiry-bubble-header {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-sub);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inquiry-prompt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.inquiry-chip {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  color: var(--text-sub);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.inquiry-chip:hover {
+  background: rgba(34, 211, 238, 0.1);
+  color: var(--accent-cyan);
+  border-color: rgba(34, 211, 238, 0.3);
+  transform: translateY(-1px);
+}
+
+.inquiry-input-box {
+  display: flex;
+  gap: 10px;
+  position: relative;
+  background: rgba(10, 15, 26, 0.7);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 8px 12px;
+  transition: border-color 0.2s;
+}
+
+.inquiry-input-box:focus-within {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.2);
+}
+
+.inquiry-textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 13.5px;
+  font-family: inherit;
+  resize: none;
+  height: 38px;
+  line-height: 1.5;
+  outline: none;
+  padding: 4px 0;
+}
+
+.inquiry-textarea::placeholder {
+  color: rgba(148, 163, 184, 0.5);
+}
+
+.inquiry-send-btn {
+  align-self: flex-end;
+  padding: 6px 14px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  color: #050b14;
+  font-weight: 600;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.inquiry-send-btn:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: scale(1.02);
+}
+
+.inquiry-send-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+
+.inquiry-typing-indicator {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  padding: 4px 8px;
+}
+
+.inquiry-typing-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  animation: typingPulse 1.2s infinite ease-in-out;
+}
+.inquiry-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.inquiry-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingPulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1.1); opacity: 1; }
+}
+
 </style>
 </head>
 <body>
@@ -1499,6 +1728,36 @@ body {
           <button class="export-btn" id="btnCopyJson">📑 复制结构数据</button>
         </div>
       </div>
+    
+      <!-- 穿透追问 · 深度研讨室 -->
+      <div class="inquiry-section" id="inquirySection">
+        <div class="inquiry-header">
+          <div class="inquiry-title">
+            <span class="pulse-dot"></span>
+            <span>穿透追问 · 深度研讨室</span>
+            <span class="inquiry-badge">已锚定上方前序全景分析</span>
+          </div>
+          <button class="export-btn" id="btnClearInquiry" style="padding:4px 10px;font-size:12px;" title="清空当前追问记录">🧹 清空追问</button>
+        </div>
+        <div class="inquiry-body">
+          <div class="inquiry-prompt-chips" id="inquiryChips">
+            <div class="inquiry-chip" data-query="结合上述推演，如果我要在接下来7天内启动第一步，最致命的潜在盲区是什么？">⚡ 7天启动最致命盲区？</div>
+            <div class="inquiry-chip" data-query="请进一步深化上述【极限平衡】视角：若资源缩减为目前的1/5，破局切入点在哪里？">🎯 极端资源限制下的破局点？</div>
+            <div class="inquiry-chip" data-query="站在反对者的最强理由（钢人对立面）来看，我该如何提前布局化解阻力？">🛡️ 如何提前化解反对力量？</div>
+          </div>
+          <div class="inquiry-chat-list" id="inquiryChatList">
+            <!-- 消息流注入点 -->
+          </div>
+          <div class="inquiry-input-box">
+            <textarea class="inquiry-textarea" id="inquiryInput" rows="1" placeholder="围绕上方议题与四重多维透镜分析，继续向 AI 发起深度追问... (Enter 发送，Shift+Enter 换行)"></textarea>
+            <button class="inquiry-send-btn" id="btnSendInquiry">
+              <span>发送</span>
+              <span>↵</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
     </section>
   </div>
 
@@ -1919,6 +2178,7 @@ body {
 
     applyModeFilter();
     document.getElementById("resultSection").style.display = "block";
+    renderInquiryChatList();
   }
 
   async function getHistoryList() {
@@ -2064,6 +2324,253 @@ body {
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
   }
+
+  // ==========================================================================
+  // 深度研讨室 (Inquiry Room) 交互与流式对话逻辑
+  // ==========================================================================
+  let isInquiring = false;
+  let inquiryAbortController = null;
+
+  function renderInquiryChatList() {
+    const listEl = document.getElementById("inquiryChatList");
+    if (!listEl) return;
+    if (!currentResultObj) {
+      listEl.innerHTML = "";
+      return;
+    }
+    if (!Array.isArray(currentResultObj.inquiries)) {
+      currentResultObj.inquiries = [];
+    }
+    const inq = currentResultObj.inquiries;
+    if (inq.length === 0) {
+      listEl.innerHTML = '<div style="color:var(--text-sub);font-size:13px;text-align:center;padding:16px 0;">💬 暂无追问。点击上方快捷问题，或在下方输入框中直接与 AI 探讨上面的分析结论。</div>';
+      return;
+    }
+    listEl.innerHTML = inq.map((msg, i) => {
+      const isUser = msg.role === 'user';
+      const author = isUser ? '👤 追问' : '✦ 棱镜思辨';
+      const contentHtml = isUser ? renderMarkdown(msg.content) : renderMarkdown(msg.content);
+      return `
+        <div class="inquiry-msg ${msg.role}">
+          <div class="inquiry-bubble">
+            <div class="inquiry-bubble-header">${author}</div>
+            <div class="inquiry-bubble-text">${contentHtml}</div>
+          </div>
+        </div>
+      `;
+    }).join("");
+    listEl.scrollTop = listEl.scrollHeight;
+  }
+
+  function buildInquirySystemPrompt(obj) {
+    const d = obj.data || {};
+    const topic = obj.topic || "当前议题";
+
+    let summary = `【议题】：${topic}\n`;
+    if (d.punchline) {
+      summary += `【第一性原理 / 认知破局】：${d.punchline.title || ''} - ${d.punchline.desc || ''}\n`;
+    }
+    if (d.dual) {
+      summary += `【双重解释白板 (极简本质)】：${d.dual.whiteboard || ''}\n`;
+      summary += `【双重解释象牙塔 (学术严谨)】：${d.dual.tower || ''}\n`;
+    }
+    if (d.deconstruct) {
+      summary += `【底层逻辑与系统分水岭】：${d.deconstruct.architecture || ''} | ${d.deconstruct.watershed || ''} | 支配法则：${d.deconstruct.laws || ''}\n`;
+    }
+    if (d.matrix) {
+      const tl = (d.matrix.timeline || []).map(t => `${t.epoch}: ${t.desc}`).join(" -> ");
+      summary += `【时间演进轨迹】：${tl}\n`;
+      summary += `【跨领域横向映射】：${d.matrix.horizontal || ''}\n`;
+    }
+    if (d.steelman) {
+      summary += `【钢人辩论 - 最强正方论据】：${d.steelman.pro || ''}\n`;
+      summary += `【钢人辩论 - 最强反方论据】：${d.steelman.con || ''}\n`;
+      summary += `【平衡跃迁点】：${d.steelman.pivot || ''}\n`;
+    }
+    if (d.action) {
+      summary += `【行动落地建议】：${d.action}\n`;
+    }
+
+    return `你是一位顶级的战略认知架构师与第一性原理思辨专家。
+用户刚刚在“ThinkPrism · 思想棱镜”中针对以下议题完成了全面的多维视角透镜推演，推演全景如下：
+==================== 前序全景分析研报 ====================
+${summary}
+========================================================
+
+现在用户围绕上述议题及前面的多维推演结果，向你展开深度的定向追问与研讨交流。
+【回复准则】：
+1. 深度扎根：牢牢立足于前序的分析结论、反向工程和极限平衡点，切中要害，严禁假大空的套话。
+2. 视角贯通：根据用户的问题，自然地调动第一性原理、双重解释或钢人反方视角进行穿透解答。
+3. 结构精炼：条理清晰，言简意赅，洞见深刻，适合高阶决策者快速吸收。支持标准 Markdown 排版。`;
+  }
+
+  async function updateHistoryInquiry(obj) {
+    try {
+      const history = await getHistoryList();
+      const idx = history.findIndex(h => h.id === obj.id || (h.time === obj.time && h.topic === obj.topic));
+      if (idx !== -1) {
+        history[idx].inquiries = obj.inquiries;
+      } else {
+        history.unshift(obj);
+      }
+      const serialized = JSON.stringify(history);
+      if (window.cherry && window.cherry.storage && window.cherry.storage.set) {
+        await window.cherry.storage.set('think_prism_history', serialized);
+      }
+      localStorage.setItem('think_prism_history', serialized);
+    } catch(e) {
+      console.warn("保存追问至历史失败:", e);
+    }
+  }
+
+  async function sendInquiry(userQuestion) {
+    if (!currentResultObj) {
+      showToast("请先生成或选择一项思考档案");
+      return;
+    }
+    if (isInquiring) return;
+    const q = (userQuestion || "").trim();
+    if (!q) return;
+
+    if (!Array.isArray(currentResultObj.inquiries)) {
+      currentResultObj.inquiries = [];
+    }
+
+    // 压入用户消息
+    currentResultObj.inquiries.push({
+      role: 'user',
+      content: q,
+      time: Date.now()
+    });
+
+    const inputEl = document.getElementById("inquiryInput");
+    if (inputEl) inputEl.value = "";
+
+    // 创建 assistant 占位消息
+    const assistantMsg = {
+      role: 'assistant',
+      content: '',
+      time: Date.now()
+    };
+    currentResultObj.inquiries.push(assistantMsg);
+
+    renderInquiryChatList();
+
+    const listEl = document.getElementById("inquiryChatList");
+    const lastMsgEl = listEl.lastElementChild;
+    const bubbleTextEl = lastMsgEl ? lastMsgEl.querySelector(".inquiry-bubble-text") : null;
+    if (bubbleTextEl) {
+      bubbleTextEl.innerHTML = '<div class="inquiry-typing-indicator"><div class="inquiry-typing-dot"></div><div class="inquiry-typing-dot"></div><div class="inquiry-typing-dot"></div></div>';
+    }
+
+    const sendBtn = document.getElementById("btnSendInquiry");
+    if (sendBtn) sendBtn.disabled = true;
+    isInquiring = true;
+
+    // 构造对话上下文
+    const systemPrompt = buildInquirySystemPrompt(currentResultObj);
+    const messages = [
+      { role: 'system', content: systemPrompt }
+    ];
+
+    // 加入过去的追问记录（最近 10 条）
+    const pastInquiries = currentResultObj.inquiries.slice(0, -1).slice(-10);
+    pastInquiries.forEach(m => {
+      messages.push({
+        role: m.role,
+        content: m.content
+      });
+    });
+
+    try {
+      if (window.cherry && window.cherry.ai && window.cherry.ai.chat) {
+        let fullReply = "";
+        inquiryAbortController = new AbortController();
+        const response = await window.cherry.ai.chat({
+          messages: messages,
+          signal: inquiryAbortController.signal,
+          onChunk: (chunk) => {
+            const delta = (chunk && chunk.content) || (chunk && chunk.delta) || (typeof chunk === 'string' ? chunk : "");
+            if (delta) {
+              fullReply += delta;
+              assistantMsg.content = fullReply;
+              if (bubbleTextEl) {
+                bubbleTextEl.innerHTML = renderMarkdown(fullReply);
+              }
+              listEl.scrollTop = listEl.scrollHeight;
+            }
+          }
+        });
+
+        // 补全最终返回值（若某些模型不走 onChunk 或有返回值）
+        if (!fullReply && response) {
+          const finalStr = (typeof response === 'string') ? response : (response.content || (response.message && response.message.content) || "");
+          if (finalStr) {
+            assistantMsg.content = finalStr;
+            if (bubbleTextEl) {
+              bubbleTextEl.innerHTML = renderMarkdown(finalStr);
+            }
+          }
+        }
+      } else {
+        // 无 Cherry 环境演示兜底
+        await new Promise(r => setTimeout(r, 1000));
+        assistantMsg.content = `【模拟研讨回复】针对你的追问：“${q}”，结合上方前序分析：\n1. **本质锚定**：若要在当前态势下破局，需严守第一性原理中的核心公理，避免陷入次级表象的伪优化；\n2. **执行切入**：正如前文落地建议所述，首要任务是在低阻力边界验证最小闭环；\n3. **防守反击**：利用反方最大痛点设计对冲方案，确保风险敞口下行受限而上行收益无限。`;
+        if (bubbleTextEl) {
+          bubbleTextEl.innerHTML = renderMarkdown(assistantMsg.content);
+        }
+      }
+
+      // 持久化更新到 storage
+      await updateHistoryInquiry(currentResultObj);
+
+    } catch(err) {
+      console.error("Inquiry error:", err);
+      assistantMsg.content = "追问研讨遇到异常：" + (err.message || String(err));
+      if (bubbleTextEl) {
+        bubbleTextEl.innerHTML = renderMarkdown(assistantMsg.content);
+      }
+    } finally {
+      isInquiring = false;
+      inquiryAbortController = null;
+      if (sendBtn) sendBtn.disabled = false;
+      renderInquiryChatList();
+    }
+  }
+
+  // 绑定研讨室事件
+  document.getElementById("btnSendInquiry").addEventListener("click", () => {
+    const inputEl = document.getElementById("inquiryInput");
+    if (inputEl) sendInquiry(inputEl.value);
+  });
+
+  document.getElementById("inquiryInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      const inputEl = document.getElementById("inquiryInput");
+      if (inputEl) sendInquiry(inputEl.value);
+    }
+  });
+
+  document.getElementById("btnClearInquiry").addEventListener("click", async () => {
+    if (!currentResultObj) return;
+    currentResultObj.inquiries = [];
+    renderInquiryChatList();
+    await updateHistoryInquiry(currentResultObj);
+    showToast("已清空研讨追问记录");
+  });
+
+  document.querySelectorAll(".inquiry-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      const q = chip.dataset.query;
+      if (q) {
+        const inputEl = document.getElementById("inquiryInput");
+        if (inputEl) inputEl.value = q;
+        sendInquiry(q);
+      }
+    });
+  });
+
 </script>
 </body>
 </html>
