@@ -4,10 +4,10 @@
     "zh": "ThinkPrism - 多维思辨透镜",
     "en": "ThinkPrism - Multi-Dimensional Thinking Lens"
   },
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": {
-    "zh": "输入任一议题，通过第一性原理、双重解释与极限平衡多维剖析；底部新增【穿透追问·深度研讨室】，锚定前序全景分析持续对话。",
-    "en": "Multi-lens inquiry: First-Principles, Dual-Explanation & Extreme Balance tests. Includes Follow-Up Deep Inquiry Room anchored on past deductions."
+    "zh": "输入任一议题，通过第一性原理、双重解释与极限平衡多维剖析；底部【穿透追问·深度研讨室】锚定前序全景分析持续对话。",
+    "en": "Multi-lens inquiry with First-Principles, Dual-Explanation & Extreme Balance tests, plus a Follow-Up Deep Inquiry Room anchored on past deductions."
   },
   "icon": {
     "path": "icon.png",
@@ -20,16 +20,16 @@
     "clipboard.write"
   ],
   "update": {
-    "url": "https://duzhilei951.github.io/think-prism/manifest.json?v=1.0.4"
+    "url": "https://duzhilei951.github.io/think-prism/manifest.json?v=1.0.5"
   },
   "package": {
-    "url": "https://duzhilei951.github.io/think-prism/releases/1.0.4/think-prism.miniapp",
+    "url": "https://duzhilei951.github.io/think-prism/releases/1.0.5/think-prism.miniapp",
     "iconUrl": "https://duzhilei951.github.io/think-prism/icon.png",
-    "sha256": "cabd146ad7513bd19d678c450ec94320947fde2d8434636a70dc4fdfc5ca05c7",
-    "size": 29462
+    "sha256": "875da391532d07765b59f3d79e0c2017c62369ceb8d527d595da9f5c223f6b6d",
+    "size": 30213
   },
   "releaseNotes": {
-    "zh": "v1.0.4: 新增【穿透追问·深度研讨室】，将上方全景分析自动注入上下文，支持围绕推演结果与 AI 深度持续研讨，并持久化保存追问记录。",
-    "en": "v1.0.4: Added Follow-Up Deep Inquiry Room anchored on preceding multi-dimensional analysis, supporting continuous AI deliberation and storage."
+    "zh": "v1.0.5: 修复穿透追问的核心 Bug——修正 cherry.ai.chat 双参数调用签名，彻底解决发送消息后模型无响应问题；发送按钮改为高亮醒目样式并补充 Enter 提交提示。",
+    "en": "v1.0.5: Fixed the core inquiry bug by correcting the cherry.ai.chat two-argument call signature, resolving the no-response issue; made the send button prominent with an Enter-key hint."
   }
 }

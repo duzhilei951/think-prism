@@ -1407,29 +1407,60 @@ body {
 
 .inquiry-send-btn {
   align-self: flex-end;
-  padding: 6px 14px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-  color: #050b14;
-  font-weight: 600;
-  font-size: 13px;
+  flex-shrink: 0;
+  padding: 10px 22px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #06b6d4 0%, #6366f1 100%);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: 0.5px;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 5px;
-  transition: all 0.2s;
+  gap: 6px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(6, 182, 212, 0.4);
 }
 
 .inquiry-send-btn:hover:not(:disabled) {
-  opacity: 0.92;
-  transform: scale(1.02);
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 7px 22px rgba(6, 182, 212, 0.6);
+}
+
+.inquiry-send-btn:active:not(:disabled) {
+  transform: scale(0.96);
+  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.4);
 }
 
 .inquiry-send-btn:disabled {
-  opacity: 0.45;
+  opacity: 0.55;
   cursor: not-allowed;
-  filter: grayscale(0.5);
+  filter: grayscale(0.35);
+  box-shadow: none;
+  transform: none;
+}
+
+.inquiry-input-hint {
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: var(--text-sub);
+  text-align: right;
+  user-select: none;
+}
+
+.inquiry-input-hint kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 2px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10.5px;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
 .inquiry-typing-indicator {
@@ -1749,12 +1780,13 @@ body {
             <!-- 消息流注入点 -->
           </div>
           <div class="inquiry-input-box">
-            <textarea class="inquiry-textarea" id="inquiryInput" rows="1" placeholder="围绕上方议题与四重多维透镜分析，继续向 AI 发起深度追问... (Enter 发送，Shift+Enter 换行)"></textarea>
+            <textarea class="inquiry-textarea" id="inquiryInput" rows="1" placeholder="围绕上方议题与四重多维透镜分析，继续向 AI 发起深度追问..."></textarea>
             <button class="inquiry-send-btn" id="btnSendInquiry">
-              <span>发送</span>
+              <span>发送追问</span>
               <span>↵</span>
             </button>
           </div>
+          <div class="inquiry-input-hint">按 <kbd>Enter</kbd> 直接提交发送 · <kbd>Shift</kbd> + <kbd>Enter</kbd> 换行</div>
         </div>
       </div>
 
@@ -2473,43 +2505,51 @@ ${summary}
       { role: 'system', content: systemPrompt }
     ];
 
-    // 加入过去的追问记录（最近 10 条）
+    // 加入过去的追问记录（最近 10 条）；跳过空内容，避免部分模型接口报 400
     const pastInquiries = currentResultObj.inquiries.slice(0, -1).slice(-10);
     pastInquiries.forEach(m => {
+      const c = (m && m.content) ? String(m.content).trim() : '';
+      if (!c) return;
       messages.push({
-        role: m.role,
-        content: m.content
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: c
       });
     });
 
     try {
       if (window.cherry && window.cherry.ai && window.cherry.ai.chat) {
         let fullReply = "";
-        inquiryAbortController = new AbortController();
-        const response = await window.cherry.ai.chat({
-          messages: messages,
-          signal: inquiryAbortController.signal,
-          onChunk: (chunk) => {
-            const delta = (chunk && chunk.content) || (chunk && chunk.delta) || (typeof chunk === 'string' ? chunk : "");
-            if (delta) {
-              fullReply += delta;
-              assistantMsg.content = fullReply;
-              if (bubbleTextEl) {
-                bubbleTextEl.innerHTML = renderMarkdown(fullReply);
+
+        // ★ 关键修复：cherry.ai.chat 必须传「两个参数」——
+        //   第 1 个是请求参数（model / messages），第 2 个才是回调（onChunk）。
+        //   旧写法把 onChunk 混进第一个对象里，导致流式回调永远不被注册，模型毫无回应。
+        await window.cherry.ai.chat(
+          {
+            model: 'default',
+            messages: messages
+          },
+          {
+            onChunk: (chunk) => {
+              const delta = (typeof chunk === 'string')
+                ? chunk
+                : ((chunk && (chunk.content || chunk.delta || chunk.text)) || "");
+              if (delta) {
+                fullReply += delta;
+                assistantMsg.content = fullReply;
+                if (bubbleTextEl) {
+                  bubbleTextEl.innerHTML = renderMarkdown(fullReply);
+                }
+                listEl.scrollTop = listEl.scrollHeight;
               }
-              listEl.scrollTop = listEl.scrollHeight;
             }
           }
-        });
+        );
 
-        // 补全最终返回值（若某些模型不走 onChunk 或有返回值）
-        if (!fullReply && response) {
-          const finalStr = (typeof response === 'string') ? response : (response.content || (response.message && response.message.content) || "");
-          if (finalStr) {
-            assistantMsg.content = finalStr;
-            if (bubbleTextEl) {
-              bubbleTextEl.innerHTML = renderMarkdown(finalStr);
-            }
+        // 兜底：若模型未走流式，但 Promise 返回了完整内容
+        if (!fullReply) {
+          assistantMsg.content = "（本次未收到模型返回内容，请确认 Cherry Studio 已配置好默认模型后重试）";
+          if (bubbleTextEl) {
+            bubbleTextEl.innerHTML = renderMarkdown(assistantMsg.content);
           }
         }
       } else {
@@ -2526,7 +2566,15 @@ ${summary}
 
     } catch(err) {
       console.error("Inquiry error:", err);
-      assistantMsg.content = "追问研讨遇到异常：" + (err.message || String(err));
+      let errMsg = (err && (err.message || err.name)) || String(err);
+      if (err && err.name === 'Unavailable') {
+        errMsg = "当前 Cherry Studio 未配置可用的默认大模型，请先在设置中配置默认模型。";
+      } else if (err && err.name === 'RateLimited') {
+        errMsg = "调用频率或并发超过限制，请稍候重试。";
+      } else if (err && err.name === 'PermissionDenied') {
+        errMsg = "小程序缺少 ai.chat 权限授权，请在权限管理中放行。";
+      }
+      assistantMsg.content = "⚠️ 追问研讨遇到异常：" + errMsg;
       if (bubbleTextEl) {
         bubbleTextEl.innerHTML = renderMarkdown(assistantMsg.content);
       }
@@ -2545,7 +2593,8 @@ ${summary}
   });
 
   document.getElementById("inquiryInput").addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    // isComposing：中文输入法拼音候选阶段按回车是"选字"，不能当作发送
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
       e.preventDefault();
       const inputEl = document.getElementById("inquiryInput");
       if (inputEl) sendInquiry(inputEl.value);
