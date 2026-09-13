@@ -1225,6 +1225,102 @@ body {
 .md-h1 { font-size: 17px; }
 .md-h2 { font-size: 15.5px; }
 .md-h3 { font-size: 14.5px; }
+.md-h4 {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  margin: 10px 0 5px 0;
+  line-height: 1.35;
+}
+.md-h5 {
+  color: #e2e8f0;
+  font-weight: 700;
+  font-size: 13.5px;
+  margin: 8px 0 4px 0;
+  line-height: 1.35;
+}
+.md-h6 {
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 13px;
+  margin: 8px 0 4px 0;
+  line-height: 1.35;
+}
+
+/* 分隔线 */
+.md-hr {
+  border: none;
+  height: 1px;
+  margin: 14px 0;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.55), transparent);
+}
+
+/* 超链接 */
+.md-link {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(6, 182, 212, 0.5);
+  transition: all 0.2s;
+}
+.md-link:hover {
+  color: #67e8f9;
+  border-bottom-color: #67e8f9;
+}
+
+/* 删除线 */
+.md-del {
+  color: var(--text-sub);
+  text-decoration: line-through;
+}
+
+/* 任务清单勾选框 */
+.md-check {
+  color: var(--accent-emerald);
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+/* 表格 */
+.md-table-wrap {
+  overflow-x: auto;
+  margin: 12px 0;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 15, 26, 0.5);
+}
+.md-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  text-align: left;
+}
+.md-table th {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--accent-cyan);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.md-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  line-height: 1.6;
+  vertical-align: top;
+}
+.md-table tr:last-child td {
+  border-bottom: none;
+}
+.md-table tbody tr:hover td {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+/* 引用块内换行与列表间距微调 */
+.md-quote br { line-height: 1.9; }
+.md-ul .md-ul, .md-ol .md-ol, .md-ul .md-ol, .md-ol .md-ul {
+  margin: 4px 0 4px 18px;
+}
 
 /* ==========================================================================
    深度研讨室 · 围绕全景分析的穿透追问
@@ -2111,76 +2207,232 @@ body {
     }
   }
 
-  // ===== 轻量级全功能 Markdown 实时解析渲染器 =====
+  // ==========================================================================
+  // 完整版 Markdown 渲染引擎（支持：代码块/表格/1~6级标题/分隔线/引用/
+  // 有序无序及嵌套列表/任务清单/加粗斜体删除线/行内代码/超链接）
+  // ==========================================================================
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // 行内元素渲染（输入必须是已 HTML 转义的文本，避免二次转义）
+  function renderInline(escaped) {
+    let s = String(escaped);
+    const codes = [];
+
+    // 先用占位符保护行内代码，防止其中的 * _ 被误判为强调符号
+    s = s.replace(/`([^`]+)`/g, function (m, c) {
+      codes.push(c);
+      return '\u0001C' + (codes.length - 1) + '\u0001';
+    });
+
+    // 超链接 [文本](地址)
+    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,
+      '<a class="md-link" href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+    // 加粗
+    s = s.replace(/\*\*([\s\S]+?)\*\*/g, '<strong class="md-strong">$1</strong>');
+    s = s.replace(/__([\s\S]+?)__/g, '<strong class="md-strong">$1</strong>');
+
+    // 删除线
+    s = s.replace(/~~([\s\S]+?)~~/g, '<del class="md-del">$1</del>');
+
+    // 斜体（避免误伤 ** 与列表符号）
+    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em class="md-em">$2</em>');
+    s = s.replace(/(^|[^_\w])_([^_\n]+)_/g, '$1<em class="md-em">$2</em>');
+
+    // 还原行内代码
+    s = s.replace(/\u0001C(\d+)\u0001/g, function (m, n) {
+      return '<code class="md-code">' + codes[Number(n)] + '</code>';
+    });
+    return s;
+  }
+
+  // 拆分表格行：去掉首尾竖线后按 | 切分
+  function splitTableRow(row) {
+    return row.replace(/^\s*\|/, '').replace(/\|\s*$/, '').split('|');
+  }
+
   function renderMarkdown(md) {
-    if (!md) return "";
-    let str = String(md);
-    
-    // 1. HTML 转义
-    str = str.replace(/&/g, "&amp;")
-             .replace(/</g, "&lt;")
-             .replace(/>/g, "&gt;");
+    if (md === null || md === undefined || md === '') return '';
+    let src = String(md).replace(/\r\n?/g, '\n');
+    if (!src.trim()) return '';
 
-    // 2. 代码块 ```code```
-    str = str.replace(/```([\s\S]*?)```/g, function(match, code) {
-      return '<pre class="md-pre"><code>' + code.trim() + '</code></pre>';
+    // ---- 1) 先抽出围栏代码块，用占位符替换，避免后续逐行解析破坏其内容 ----
+    const codeStore = [];
+    const stash = function (html) {
+      codeStore.push(html);
+      return '\u0000B' + (codeStore.length - 1) + '\u0000';
+    };
+    // 已闭合的代码块
+    src = src.replace(/```[ \t]*[a-zA-Z0-9#+\-]*[ \t]*\n([\s\S]*?)```/g, function (m, code) {
+      return stash('<pre class="md-pre"><code>' + escapeHtml(code.replace(/\n$/, '')) + '</code></pre>');
+    });
+    // 流式输出中尚未闭合的代码块
+    src = src.replace(/```[ \t]*[a-zA-Z0-9#+\-]*[ \t]*\n?([\s\S]*)$/, function (m, code) {
+      return stash('<pre class="md-pre"><code>' + escapeHtml(code) + '</code></pre>');
     });
 
-    // 3. 行内代码 `code`
-    str = str.replace(/`([^`]+)`/g, '<code class="md-code">$1</code>');
+    const lines = src.split('\n');
+    const out = [];
+    const listStack = [];   // 列表层级栈 [{type:'ul'|'ol', indent:N}]
+    let i = 0;
 
-    // 4. 标题 ### h3, ## h2, # h1
-    str = str.replace(/^### (.*$)/gim, '<h3 class="md-h3">$1</h3>');
-    str = str.replace(/^## (.*$)/gim, '<h2 class="md-h2">$1</h2>');
-    str = str.replace(/^# (.*$)/gim, '<h1 class="md-h1">$1</h1>');
-
-    // 5. 引用块 > quote
-    str = str.replace(/^\&gt;\s?(.*$)/gim, '<blockquote class="md-quote">$1</blockquote>');
-
-    // 6. 逐行处理列表
-    const lines = str.split('\n');
-    let out = [];
-    let inUl = false;
-    let inOl = false;
-
-    lines.forEach(line => {
-      const trimmed = line.trim();
-      if (/^[\-\+\*]\s+/.test(trimmed)) {
-        if (!inUl) {
-          if (inOl) { out.push("</ol>"); inOl = false; }
-          out.push('<ul class="md-ul">');
-          inUl = true;
-        }
-        out.push('<li class="md-li">' + trimmed.replace(/^[\-\+\*]\s+/, "") + "</li>");
-      } else if (/^\d+\.\s+/.test(trimmed)) {
-        if (!inOl) {
-          if (inUl) { out.push("</ul>"); inUl = false; }
-          out.push('<ol class="md-ol">');
-          inOl = true;
-        }
-        out.push('<li class="md-li">' + trimmed.replace(/^\d+\.\s+/, "") + "</li>");
-      } else {
-        if (inUl) { out.push("</ul>"); inUl = false; }
-        if (inOl) { out.push("</ol>"); inOl = false; }
-        if (trimmed) {
-          if (trimmed.startsWith("<pre") || trimmed.startsWith("<h1") || trimmed.startsWith("<h2") || trimmed.startsWith("<h3") || trimmed.startsWith("<blockquote")) {
-            out.push(trimmed);
-          } else {
-            out.push('<p class="md-p">' + trimmed + "</p>");
-          }
-        }
+    // 惰性闭合：<li> 一直保持打开，直到同级下一项或退出层级时才补 </li>，
+    // 这样嵌套子列表就会正确地落在父 <li> 内部，生成合法 HTML 结构。
+    const closeAllLists = function () {
+      while (listStack.length) {
+        out.push('</li>');
+        out.push(listStack.pop().type === 'ol' ? '</ol>' : '</ul>');
       }
+    };
+
+    while (i < lines.length) {
+      const rawLine = lines[i];
+      const line = rawLine.replace(/\s+$/, '');
+      const trimmed = line.trim();
+
+      // 空行
+      if (!trimmed) {
+        closeAllLists();
+        i++;
+        continue;
+      }
+
+      // 代码块占位符
+      if (/^\u0000B\d+\u0000$/.test(trimmed)) {
+        closeAllLists();
+        out.push(trimmed);
+        i++;
+        continue;
+      }
+
+      // 分隔线 --- *** ___
+      if (/^([-*_])\s*\1\s*\1[\s\-*_]*$/.test(trimmed)) {
+        closeAllLists();
+        out.push('<hr class="md-hr">');
+        i++;
+        continue;
+      }
+
+      // 标题 # ~ ######
+      const hMatch = trimmed.match(/^(#{1,6})\s+(.*?)\s*#*$/);
+      if (hMatch) {
+        closeAllLists();
+        const lv = hMatch[1].length;
+        out.push('<h' + lv + ' class="md-h' + lv + '">' +
+                 renderInline(escapeHtml(hMatch[2])) + '</h' + lv + '>');
+        i++;
+        continue;
+      }
+
+      // 表格：当前行含 |，且下一行是分隔行
+      if (trimmed.indexOf('|') !== -1 && (i + 1) < lines.length &&
+          /^\s*\|?[\s:|\-]+\|[\s:|\-]*$/.test(lines[i + 1]) && /\-/.test(lines[i + 1])) {
+        closeAllLists();
+        const headers = splitTableRow(trimmed);
+        const aligns = splitTableRow(lines[i + 1]).map(function (c) {
+          const t = c.trim();
+          const left = t.charAt(0) === ':';
+          const right = t.charAt(t.length - 1) === ':';
+          return (left && right) ? 'center' : (right ? 'right' : (left ? 'left' : ''));
+        });
+        i += 2;
+        const bodyRows = [];
+        while (i < lines.length && lines[i].trim() && lines[i].indexOf('|') !== -1) {
+          bodyRows.push(splitTableRow(lines[i].trim()));
+          i++;
+        }
+        let tbl = '<div class="md-table-wrap"><table class="md-table"><thead><tr>';
+        headers.forEach(function (c, ci) {
+          tbl += '<th' + (aligns[ci] ? ' style="text-align:' + aligns[ci] + '"' : '') + '>' +
+                 renderInline(escapeHtml(c.trim())) + '</th>';
+        });
+        tbl += '</tr></thead><tbody>';
+        bodyRows.forEach(function (r) {
+          tbl += '<tr>';
+          for (let ci = 0; ci < headers.length; ci++) {
+            tbl += '<td' + (aligns[ci] ? ' style="text-align:' + aligns[ci] + '"' : '') + '>' +
+                   renderInline(escapeHtml((r[ci] || '').trim())) + '</td>';
+          }
+          tbl += '</tr>';
+        });
+        tbl += '</tbody></table></div>';
+        out.push(tbl);
+        continue;
+      }
+
+      // 引用块 > （连续多行合并为一个引用块）
+      if (/^>\s?/.test(trimmed)) {
+        closeAllLists();
+        const quoted = [];
+        while (i < lines.length && /^\s*>\s?/.test(lines[i])) {
+          quoted.push(lines[i].replace(/^\s*>\s?/, ''));
+          i++;
+        }
+        out.push('<blockquote class="md-quote">' +
+                 renderInline(escapeHtml(quoted.join('\n'))).replace(/\n/g, '<br>') +
+                 '</blockquote>');
+        continue;
+      }
+
+      // 列表（支持缩进嵌套、有序无序混排、任务清单）
+      const liMatch = rawLine.match(/^(\s*)([-+*]|\d+[.)])\s+(.*)$/);
+      if (liMatch) {
+        const indent = liMatch[1].replace(/\t/g, '    ').length;
+        const type = /^\d/.test(liMatch[2]) ? 'ol' : 'ul';
+
+        // 退出比当前更深的层级（逐层补 </li> 与列表结束标签）
+        while (listStack.length && listStack[listStack.length - 1].indent > indent) {
+          out.push('</li>');
+          out.push(listStack.pop().type === 'ol' ? '</ol>' : '</ul>');
+        }
+        // 同层级但列表类型改变 → 换一个新列表
+        if (listStack.length && listStack[listStack.length - 1].indent === indent &&
+            listStack[listStack.length - 1].type !== type) {
+          out.push('</li>');
+          out.push(listStack.pop().type === 'ol' ? '</ol>' : '</ul>');
+        }
+        // 同层级同类型 → 先闭合上一项
+        if (listStack.length && listStack[listStack.length - 1].indent === indent) {
+          out.push('</li>');
+        }
+        // 进入更深层级 → 开启新列表（作为上一项的子列表）
+        if (!listStack.length || listStack[listStack.length - 1].indent < indent) {
+          listStack.push({ type: type, indent: indent });
+          out.push(type === 'ol' ? '<ol class="md-ol">' : '<ul class="md-ul">');
+        }
+
+        let content = liMatch[3];
+        let checkbox = '';
+        const cbMatch = content.match(/^\[([ xX])\]\s*(.*)$/);
+        if (cbMatch) {
+          checkbox = '<span class="md-check">' +
+                     (/[xX]/.test(cbMatch[1]) ? '☑' : '☐') + '</span> ';
+          content = cbMatch[2];
+        }
+        out.push('<li class="md-li">' + checkbox + renderInline(escapeHtml(content)));
+        i++;
+        continue;
+      }
+
+      // 普通段落
+      closeAllLists();
+      out.push('<p class="md-p">' + renderInline(escapeHtml(line)) + '</p>');
+      i++;
+    }
+
+    closeAllLists();
+
+    // ---- 2) 还原代码块 ----
+    let html = out.join('');
+    html = html.replace(/\u0000B(\d+)\u0000/g, function (m, n) {
+      return codeStore[Number(n)] || '';
     });
-    if (inUl) out.push("</ul>");
-    if (inOl) out.push("</ol>");
-
-    let html = out.join("");
-
-    // 7. 粗体与斜体
-    html = html.replace(/\*\*([^\*]+)\*\*/g, '<strong class="md-strong">$1</strong>');
-    html = html.replace(/__([^_]+)__/g, '<strong class="md-strong">$1</strong>');
-    html = html.replace(/\*([^\*<]+)\*/g, '<em class="md-em">$1</em>');
-
     return html;
   }
 
