@@ -4,7 +4,7 @@
     "zh": "ThinkPrism - 多维思辨透镜",
     "en": "ThinkPrism - Multi-Dimensional Thinking Lens"
   },
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": {
     "zh": "输入任一议题，通过第一性原理、双重解释与极限平衡多维剖析；底部【穿透追问·深度研讨室】锚定前序全景分析持续对话。",
     "en": "Multi-lens inquiry with First-Principles, Dual-Explanation & Extreme Balance tests, plus a Follow-Up Deep Inquiry Room anchored on past deductions."
@@ -20,16 +20,16 @@
     "clipboard.write"
   ],
   "update": {
-    "url": "https://duzhilei951.github.io/think-prism/manifest.json?v=1.0.6"
+    "url": "https://duzhilei951.github.io/think-prism/manifest.json"
   },
   "package": {
-    "url": "https://duzhilei951.github.io/think-prism/releases/1.0.6/think-prism.miniapp",
+    "url": "https://duzhilei951.github.io/think-prism/releases/1.0.7/think-prism.miniapp",
     "iconUrl": "https://duzhilei951.github.io/think-prism/icon.png",
-    "sha256": "16bdb035c5f383f5f72ee1e62b88b025c411dedca2237e129d50ff6f63b42b16",
-    "size": 32584
+    "sha256": "af6dd009c2a69e8d9284bd2a48175529b46ae27c0be60006979d1e8b9f60ec75",
+    "size": 32438
   },
   "releaseNotes": {
-    "zh": "v1.0.6: 重写完整版 Markdown 渲染引擎，追问与研报现已支持表格、1~6级标题、分隔线、引用、有序无序嵌套列表、任务清单、加粗斜体删除线、行内代码、代码块与超链接。",
-    "en": "v1.0.6: Rebuilt the Markdown engine; inquiry replies and reports now render tables, H1-H6, rules, quotes, nested lists, task lists, emphasis, strikethrough, inline code, code blocks and links."
+    "zh": "v1.0.7: v1.0.7: 规范更新地址为无参数标准形式，确保客户端更新检查稳定生效。",
+    "en": "v1.0.7: Normalized the update URL to the canonical query-free form so client update checks resolve reliably."
   }
 }
